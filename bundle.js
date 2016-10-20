@@ -48200,6 +48200,8 @@
 	    _this.state = {
 	      filterCutoff: 22000
 	    };
+	    _this.filter = new _tone2.default.Filter(22000, "lowpass");
+	    _tone2.default.Master.chain(_this.filter);
 	    _this.getMousePos = _this.getMousePos.bind(_this);
 	    _this.mouseMoveEvent = _this.mouseMoveEvent.bind(_this);
 	    return _this;
@@ -48218,6 +48220,10 @@
 	    key: 'mouseMoveEvent',
 	    value: function mouseMoveEvent(e) {
 	      var mousePos = this.getMousePos(e);
+	      this.filter.frequency.value = mousePos.x * 40;
+	      if (this.filter.frequency.value === 0) {
+	        this.filter.frequency.value = 1;
+	      }
 	      console.log('Mouse position: ' + mousePos.x + ',' + mousePos.y);
 	    }
 	  }, {
@@ -48230,6 +48236,7 @@
 	        _this2.canvas.addEventListener('mousemove', _this2.mouseMoveEvent, false);
 	      }, false);
 	      this.canvas.addEventListener('mouseup', function () {
+	        _this2.filter.frequency.value = 22000;
 	        _this2.canvas.removeEventListener('mousemove', _this2.mouseMoveEvent);
 	      }, false);
 	    }
