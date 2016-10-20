@@ -21454,9 +21454,9 @@
 	
 	var _react2 = _interopRequireDefault(_react);
 	
-	var _sequencer = __webpack_require__(289);
+	var _sequencer_container = __webpack_require__(291);
 	
-	var _sequencer2 = _interopRequireDefault(_sequencer);
+	var _sequencer_container2 = _interopRequireDefault(_sequencer_container);
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
@@ -21465,8 +21465,6 @@
 	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
 	
 	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-	
-	window.Sequencer = _sequencer2.default;
 	
 	var DrumMachine = function (_React$Component) {
 	  _inherits(DrumMachine, _React$Component);
@@ -21483,7 +21481,7 @@
 	      return _react2.default.createElement(
 	        'div',
 	        { className: 'drummachine' },
-	        _react2.default.createElement(_sequencer2.default, null)
+	        _react2.default.createElement(_sequencer_container2.default, null)
 	      );
 	    }
 	  }]);
@@ -47831,6 +47829,8 @@
 	  value: true
 	});
 	
+	var _transport_actions = __webpack_require__(292);
+	
 	var _merge = __webpack_require__(197);
 	
 	var _merge2 = _interopRequireDefault(_merge);
@@ -47838,7 +47838,8 @@
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
 	var _defaultState = {
-	  bpm: 120
+	  bpm: 120,
+	  playing: false
 	};
 	
 	var TransportReducer = function TransportReducer() {
@@ -47846,6 +47847,9 @@
 	  var action = arguments[1];
 	
 	  switch (action.type) {
+	    case _transport_actions.START_STOP:
+	      var newState = (0, _merge2.default)({}, state, { playing: action.playing });
+	      return newState;
 	    default:
 	      return state;
 	  }
@@ -47854,7 +47858,8 @@
 	exports.default = TransportReducer;
 
 /***/ },
-/* 289 */
+/* 289 */,
+/* 290 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -47873,7 +47878,13 @@
 	
 	var _tone2 = _interopRequireDefault(_tone);
 	
+	var _classnames = __webpack_require__(293);
+	
+	var _classnames2 = _interopRequireDefault(_classnames);
+	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 	
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 	
@@ -47889,23 +47900,105 @@
 	
 	    var _this = _possibleConstructorReturn(this, (Sequencer.__proto__ || Object.getPrototypeOf(Sequencer)).call(this, props));
 	
-	    _this.channel1 = new _tone2.default.Sampler("https://s3.amazonaws.com/react-drummachine/BD.WAV").toMaster();
+	    _this.sampler1 = new _tone2.default.Sampler("https://s3.amazonaws.com/react-drummachine/BD.WAV").toMaster();
+	    _this.sampler2 = new _tone2.default.Sampler("https://s3.amazonaws.com/react-drummachine/SD.WAV").toMaster();
+	
+	    _this.state = {
+	      channel1: [null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null],
+	      channel2: [null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null]
+	    };
+	
 	    _this.triggerSample = _this.triggerSample.bind(_this);
+	    _this.startStop = _this.startStop.bind(_this);
+	    _this.updateSequence = _this.updateSequence.bind(_this);
+	    _this.channel1 = new _tone2.default.Sequence(_this.triggerSample.bind(_this, "sampler1"), _this.state.channel1, "16n").start(0);
+	    _this.channel2 = new _tone2.default.Sequence(_this.triggerSample.bind(_this, "sampler2"), _this.state.channel2, "16n").start(0);
 	    return _this;
 	  }
 	
 	  _createClass(Sequencer, [{
 	    key: 'triggerSample',
-	    value: function triggerSample() {
-	      this.channel1.triggerAttackRelease(0);
+	    value: function triggerSample(sampler) {
+	      this[sampler].triggerAttackRelease(0);
+	    }
+	  }, {
+	    key: 'startStop',
+	    value: function startStop() {
+	      if (this.props.playing) {
+	        _tone2.default.Transport.stop();
+	        this.props.startStop(false);
+	      } else {
+	        _tone2.default.Transport.start();
+	        this.props.startStop(true);
+	      }
+	    }
+	  }, {
+	    key: 'channelButtons',
+	    value: function channelButtons(channel) {
+	      var _this2 = this;
+	
+	      var buttonIdx = [];
+	      for (var i = 0; i < 16; i++) {
+	        buttonIdx.push(i);
+	      }
+	      var buttons = buttonIdx.map(function (idx) {
+	        var stepClass = void 0;
+	        if (_this2.state[channel][idx]) {
+	          stepClass = (0, _classnames2.default)({
+	            "step-button": true,
+	            "step-on": true
+	          });
+	        } else {
+	          stepClass = (0, _classnames2.default)({
+	            "step-button": true,
+	            "step-on": false
+	          });
+	        }
+	        return _react2.default.createElement('div', {
+	          'data-channel': channel,
+	          'data-idx': idx,
+	          key: idx,
+	          className: stepClass,
+	          onClick: _this2.updateSequence });
+	      });
+	      return buttons;
+	    }
+	  }, {
+	    key: 'updateSequence',
+	    value: function updateSequence(e) {
+	      var channel = e.currentTarget.dataset.channel;
+	      var idx = parseInt(e.currentTarget.dataset.idx);
+	      var oldSeq = this.state[channel];
+	      if (oldSeq[idx]) {
+	        oldSeq[idx] = null;
+	        this[channel].remove(idx);
+	      } else {
+	        oldSeq[idx] = true;
+	        this[channel].add(idx, true);
+	      }
+	      this.setState(_defineProperty({}, channel, oldSeq));
 	    }
 	  }, {
 	    key: 'render',
 	    value: function render() {
 	      return _react2.default.createElement(
 	        'div',
-	        { className: 'channel1', onClick: this.triggerSample },
-	        'kick drum'
+	        null,
+	        _react2.default.createElement(
+	          'div',
+	          { className: 'start-stop', onClick: this.startStop },
+	          'start/stop'
+	        ),
+	        _react2.default.createElement(
+	          'div',
+	          { className: 'channel-row' },
+	          this.channelButtons("channel1")
+	        ),
+	        _react2.default.createElement(
+	          'div',
+	          { className: 'channel-row' },
+	          this.channelButtons("channel2")
+	        )
 	      );
 	    }
 	  }]);
@@ -47914,6 +48007,116 @@
 	}(_react2.default.Component);
 	
 	exports.default = Sequencer;
+
+/***/ },
+/* 291 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	
+	var _reactRedux = __webpack_require__(173);
+	
+	var _sequencer = __webpack_require__(290);
+	
+	var _sequencer2 = _interopRequireDefault(_sequencer);
+	
+	var _transport_actions = __webpack_require__(292);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	var mapStateToProps = function mapStateToProps(state) {
+	  return {
+	    playing: state.transport.playing
+	  };
+	};
+	
+	var mapDispatchToProps = function mapDispatchToProps(dispatch) {
+	  return {
+	    startStop: function startStop(playing) {
+	      return dispatch((0, _transport_actions.startStop)(playing));
+	    }
+	  };
+	};
+	
+	var SequencerContainer = (0, _reactRedux.connect)(mapStateToProps, mapDispatchToProps)(_sequencer2.default);
+	
+	exports.default = SequencerContainer;
+
+/***/ },
+/* 292 */
+/***/ function(module, exports) {
+
+	"use strict";
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	var START_STOP = exports.START_STOP = "START_STOP";
+	
+	var startStop = exports.startStop = function startStop(playing) {
+	  return {
+	    type: START_STOP,
+	    playing: playing
+	  };
+	};
+
+/***/ },
+/* 293 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/*!
+	  Copyright (c) 2016 Jed Watson.
+	  Licensed under the MIT License (MIT), see
+	  http://jedwatson.github.io/classnames
+	*/
+	/* global define */
+	
+	(function () {
+		'use strict';
+	
+		var hasOwn = {}.hasOwnProperty;
+	
+		function classNames () {
+			var classes = [];
+	
+			for (var i = 0; i < arguments.length; i++) {
+				var arg = arguments[i];
+				if (!arg) continue;
+	
+				var argType = typeof arg;
+	
+				if (argType === 'string' || argType === 'number') {
+					classes.push(arg);
+				} else if (Array.isArray(arg)) {
+					classes.push(classNames.apply(null, arg));
+				} else if (argType === 'object') {
+					for (var key in arg) {
+						if (hasOwn.call(arg, key) && arg[key]) {
+							classes.push(key);
+						}
+					}
+				}
+			}
+	
+			return classes.join(' ');
+		}
+	
+		if (typeof module !== 'undefined' && module.exports) {
+			module.exports = classNames;
+		} else if (true) {
+			// register as 'classnames', consistent with npm package name
+			!(__WEBPACK_AMD_DEFINE_ARRAY__ = [], __WEBPACK_AMD_DEFINE_RESULT__ = function () {
+				return classNames;
+			}.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__), __WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
+		} else {
+			window.classNames = classNames;
+		}
+	}());
+
 
 /***/ }
 /******/ ]);

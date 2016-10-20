@@ -1,0 +1,20 @@
+.start-stop {
+  width: 100px;
+  height: 50px;
+  text-align: center;
+  border: 1px solid black;
+}
+
+.step-button {
+  height: 50px;
+  width: 50px;
+  border: 1px solid black;
+}
+
+.channel-row {
+  display: flex;
+}
+
+.step-on {
+  background: grey;
+}
