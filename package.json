@@ -1,0 +1,35 @@
+{
+  "name": "drum_machine",
+  "version": "1.0.0",
+  "description": "## Background I will be building a 16-step drum sequencer, inspired by the Roland 808 and other classic drum machines.  You will be able to trigger sounds by adding them to the sequencer and you will be able to add basic effects to the overall mix.  The overall mix will be outputted to a visualizer which will create a graphical representation of the sound.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "webpack": "./node_modules/.bin/webpack --watch"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/taekyunggg/drum_machine.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/taekyunggg/drum_machine/issues"
+  },
+  "homepage": "https://github.com/taekyunggg/drum_machine#readme",
+  "dependencies": {
+    "babel-core": "^6.17.0",
+    "babel-loader": "^6.2.5",
+    "babel-preset-es2015": "^6.16.0",
+    "babel-preset-react": "^6.16.0",
+    "lodash": "^4.16.4",
+    "react": "^15.3.2",
+    "react-dom": "^15.3.2",
+    "react-redux": "^4.4.5",
+    "react-router": "^2.8.1",
+    "redux": "^3.6.0",
+    "tone": "^0.8.0",
+    "webpack": "^1.13.2"
+  }
+}

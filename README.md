@@ -21,7 +21,7 @@ In addition, this project will include:
 
 The drum machine will consist of a single screen as the interface.  There will be a mixer section to control the volume of individual sounds at the top-right.  There will be a tab on the mixer section and when clicked, it will reveal an effects panel to adjust the overall mix.  The 16-step sequencer will live at the bottom-right of the interface.  Controls to start/stop and adjust tempo will be on the top-left of the interface.  The visualizer will live in a box in the bottom-left, under the controls.
 
-![Wireframe](/assets/wireframe.png?raw=true "Wireframe")
+![Wireframe](/assets/images/wireframe.png?raw=true "Wireframe")
 
 ## Architecture and Technologies
 
