@@ -18,3 +18,14 @@
 .step-on {
   background: grey;
 }
+
+.fx-div {
+  height: 400px;
+  width: 400px;
+  border: 1px solid black;
+}
+
+#fx-canvas {
+  height: 400px;
+  width: 400px;
+}

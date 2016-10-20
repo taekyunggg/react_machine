@@ -21458,6 +21458,10 @@
 	
 	var _sequencer_container2 = _interopRequireDefault(_sequencer_container);
 	
+	var _effects_container = __webpack_require__(294);
+	
+	var _effects_container2 = _interopRequireDefault(_effects_container);
+	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -21481,7 +21485,8 @@
 	      return _react2.default.createElement(
 	        'div',
 	        { className: 'drummachine' },
-	        _react2.default.createElement(_sequencer_container2.default, null)
+	        _react2.default.createElement(_sequencer_container2.default, null),
+	        _react2.default.createElement(_effects_container2.default, null)
 	      );
 	    }
 	  }]);
@@ -47902,10 +47907,12 @@
 	
 	    _this.sampler1 = new _tone2.default.Sampler("https://s3.amazonaws.com/react-drummachine/BD.WAV").toMaster();
 	    _this.sampler2 = new _tone2.default.Sampler("https://s3.amazonaws.com/react-drummachine/SD.WAV").toMaster();
+	    _this.sampler3 = new _tone2.default.Sampler("https://s3.amazonaws.com/react-drummachine/CH.WAV").toMaster();
 	
 	    _this.state = {
 	      channel1: [null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null],
-	      channel2: [null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null]
+	      channel2: [null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null],
+	      channel3: [null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null]
 	    };
 	
 	    _this.triggerSample = _this.triggerSample.bind(_this);
@@ -47913,6 +47920,7 @@
 	    _this.updateSequence = _this.updateSequence.bind(_this);
 	    _this.channel1 = new _tone2.default.Sequence(_this.triggerSample.bind(_this, "sampler1"), _this.state.channel1, "16n").start(0);
 	    _this.channel2 = new _tone2.default.Sequence(_this.triggerSample.bind(_this, "sampler2"), _this.state.channel2, "16n").start(0);
+	    _this.channel3 = new _tone2.default.Sequence(_this.triggerSample.bind(_this, "sampler3"), _this.state.channel3, "16n").start(0);
 	    return _this;
 	  }
 	
@@ -47998,6 +48006,11 @@
 	          'div',
 	          { className: 'channel-row' },
 	          this.channelButtons("channel2")
+	        ),
+	        _react2.default.createElement(
+	          'div',
+	          { className: 'channel-row' },
+	          this.channelButtons("channel3")
 	        )
 	      );
 	    }
@@ -48117,6 +48130,124 @@
 		}
 	}());
 
+
+/***/ },
+/* 294 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	
+	var _reactRedux = __webpack_require__(173);
+	
+	var _effects = __webpack_require__(295);
+	
+	var _effects2 = _interopRequireDefault(_effects);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	var mapStateToProps = function mapStateToProps(state) {
+	  return {};
+	};
+	
+	var mapDispatchToProps = function mapDispatchToProps(dispatch) {
+	  return {};
+	};
+	
+	var EffectsContainer = (0, _reactRedux.connect)(mapStateToProps, mapDispatchToProps)(_effects2.default);
+	
+	exports.default = EffectsContainer;
+
+/***/ },
+/* 295 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+	
+	var _react = __webpack_require__(1);
+	
+	var _react2 = _interopRequireDefault(_react);
+	
+	var _tone = __webpack_require__(285);
+	
+	var _tone2 = _interopRequireDefault(_tone);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+	
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+	
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+	
+	var Effects = function (_React$Component) {
+	  _inherits(Effects, _React$Component);
+	
+	  function Effects(props) {
+	    _classCallCheck(this, Effects);
+	
+	    var _this = _possibleConstructorReturn(this, (Effects.__proto__ || Object.getPrototypeOf(Effects)).call(this, props));
+	
+	    _this.state = {
+	      filterCutoff: 22000
+	    };
+	    _this.getMousePos = _this.getMousePos.bind(_this);
+	    _this.mouseMoveEvent = _this.mouseMoveEvent.bind(_this);
+	    return _this;
+	  }
+	
+	  _createClass(Effects, [{
+	    key: 'getMousePos',
+	    value: function getMousePos(e) {
+	      var rect = this.canvas.getBoundingClientRect();
+	      return {
+	        x: e.clientX - rect.left,
+	        y: e.clientY - rect.top
+	      };
+	    }
+	  }, {
+	    key: 'mouseMoveEvent',
+	    value: function mouseMoveEvent(e) {
+	      var mousePos = this.getMousePos(e);
+	      console.log('Mouse position: ' + mousePos.x + ',' + mousePos.y);
+	    }
+	  }, {
+	    key: 'componentDidMount',
+	    value: function componentDidMount() {
+	      var _this2 = this;
+	
+	      this.canvas = document.getElementById("fx-canvas");
+	      this.canvas.addEventListener('mousedown', function () {
+	        _this2.canvas.addEventListener('mousemove', _this2.mouseMoveEvent, false);
+	      }, false);
+	      this.canvas.addEventListener('mouseup', function () {
+	        _this2.canvas.removeEventListener('mousemove', _this2.mouseMoveEvent);
+	      }, false);
+	    }
+	  }, {
+	    key: 'render',
+	    value: function render() {
+	      return _react2.default.createElement(
+	        'div',
+	        { className: 'fx-div' },
+	        _react2.default.createElement('canvas', { id: 'fx-canvas' })
+	      );
+	    }
+	  }]);
+	
+	  return Effects;
+	}(_react2.default.Component);
+	
+	exports.default = Effects;
 
 /***/ }
 /******/ ]);
