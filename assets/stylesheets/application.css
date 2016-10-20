@@ -1,3 +1,8 @@
+.drummachine {
+  width: 1030px;
+  margin: 0 auto;
+}
+
 .start-stop {
   width: 100px;
   height: 50px;
@@ -13,6 +18,8 @@
 
 .channel-row {
   display: flex;
+  justify-content: space-between;
+  margin-bottom: 10px;
 }
 
 .step-on {
@@ -23,6 +30,7 @@
   height: 400px;
   width: 400px;
   border: 1px solid black;
+  cursor: crosshair;
 }
 
 #fx-canvas {

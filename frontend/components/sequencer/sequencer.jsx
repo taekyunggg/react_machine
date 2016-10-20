@@ -14,6 +14,9 @@ class Sequencer extends React.Component {
     this.sampler3 = new Tone.Sampler(
       "https://s3.amazonaws.com/react-drummachine/CH.WAV"
     ).toMaster();
+    this.sampler4 = new Tone.Sampler(
+      "https://s3.amazonaws.com/react-drummachine/CB.WAV"
+    ).toMaster();
 
     this.state = {
       channel1: [
@@ -25,6 +28,10 @@ class Sequencer extends React.Component {
         null, null, null, null, null, null, null, null
       ],
       channel3: [
+        null, null, null, null, null, null, null, null,
+        null, null, null, null, null, null, null, null
+      ],
+      channel4: [
         null, null, null, null, null, null, null, null,
         null, null, null, null, null, null, null, null
       ]
@@ -44,6 +51,10 @@ class Sequencer extends React.Component {
     this.channel3 = new Tone.Sequence(
       this.triggerSample.bind(this, "sampler3"),
       this.state.channel3,
+       "16n").start(0);
+    this.channel4 = new Tone.Sequence(
+      this.triggerSample.bind(this, "sampler4"),
+      this.state.channel4,
        "16n").start(0);
   }
 
@@ -71,12 +82,14 @@ class Sequencer extends React.Component {
       if (this.state[channel][idx]) {
         stepClass = classNames({
           "step-button": true,
-          "step-on": true
+          "step-on": true,
+          "step-off": false
         });
       } else {
         stepClass = classNames({
           "step-button": true,
-          "step-on": false
+          "step-on": false,
+          "step-off": true
         });
       }
       return (
@@ -119,6 +132,9 @@ class Sequencer extends React.Component {
         </div>
         <div className='channel-row'>
           { this.channelButtons("channel3") }
+        </div>
+        <div className='channel-row'>
+          { this.channelButtons("channel4") }
         </div>
 
       </div>

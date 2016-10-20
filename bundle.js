@@ -47908,11 +47908,13 @@
 	    _this.sampler1 = new _tone2.default.Sampler("https://s3.amazonaws.com/react-drummachine/BD.WAV").toMaster();
 	    _this.sampler2 = new _tone2.default.Sampler("https://s3.amazonaws.com/react-drummachine/SD.WAV").toMaster();
 	    _this.sampler3 = new _tone2.default.Sampler("https://s3.amazonaws.com/react-drummachine/CH.WAV").toMaster();
+	    _this.sampler4 = new _tone2.default.Sampler("https://s3.amazonaws.com/react-drummachine/CB.WAV").toMaster();
 	
 	    _this.state = {
 	      channel1: [null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null],
 	      channel2: [null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null],
-	      channel3: [null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null]
+	      channel3: [null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null],
+	      channel4: [null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null]
 	    };
 	
 	    _this.triggerSample = _this.triggerSample.bind(_this);
@@ -47921,6 +47923,7 @@
 	    _this.channel1 = new _tone2.default.Sequence(_this.triggerSample.bind(_this, "sampler1"), _this.state.channel1, "16n").start(0);
 	    _this.channel2 = new _tone2.default.Sequence(_this.triggerSample.bind(_this, "sampler2"), _this.state.channel2, "16n").start(0);
 	    _this.channel3 = new _tone2.default.Sequence(_this.triggerSample.bind(_this, "sampler3"), _this.state.channel3, "16n").start(0);
+	    _this.channel4 = new _tone2.default.Sequence(_this.triggerSample.bind(_this, "sampler4"), _this.state.channel4, "16n").start(0);
 	    return _this;
 	  }
 	
@@ -47954,12 +47957,14 @@
 	        if (_this2.state[channel][idx]) {
 	          stepClass = (0, _classnames2.default)({
 	            "step-button": true,
-	            "step-on": true
+	            "step-on": true,
+	            "step-off": false
 	          });
 	        } else {
 	          stepClass = (0, _classnames2.default)({
 	            "step-button": true,
-	            "step-on": false
+	            "step-on": false,
+	            "step-off": true
 	          });
 	        }
 	        return _react2.default.createElement('div', {
@@ -48011,6 +48016,11 @@
 	          'div',
 	          { className: 'channel-row' },
 	          this.channelButtons("channel3")
+	        ),
+	        _react2.default.createElement(
+	          'div',
+	          { className: 'channel-row' },
+	          this.channelButtons("channel4")
 	        )
 	      );
 	    }
@@ -48197,11 +48207,9 @@
 	
 	    var _this = _possibleConstructorReturn(this, (Effects.__proto__ || Object.getPrototypeOf(Effects)).call(this, props));
 	
-	    _this.state = {
-	      filterCutoff: 22000
-	    };
 	    _this.filter = new _tone2.default.Filter(22000, "lowpass");
-	    _tone2.default.Master.chain(_this.filter);
+	    _this.panner = new _tone2.default.Panner(0);
+	    _tone2.default.Master.chain(_this.filter, _this.panner);
 	    _this.getMousePos = _this.getMousePos.bind(_this);
 	    _this.mouseMoveEvent = _this.mouseMoveEvent.bind(_this);
 	    return _this;
@@ -48220,11 +48228,8 @@
 	    key: 'mouseMoveEvent',
 	    value: function mouseMoveEvent(e) {
 	      var mousePos = this.getMousePos(e);
-	      this.filter.frequency.value = mousePos.x * 40;
-	      if (this.filter.frequency.value === 0) {
-	        this.filter.frequency.value = 1;
-	      }
-	      console.log('Mouse position: ' + mousePos.x + ',' + mousePos.y);
+	      this.filter.frequency.value = mousePos.y * 30 + 100;
+	      this.panner.pan.value = (mousePos.x - 200) * 0.005;
 	    }
 	  }, {
 	    key: 'componentDidMount',
@@ -48235,8 +48240,9 @@
 	      this.canvas.addEventListener('mousedown', function () {
 	        _this2.canvas.addEventListener('mousemove', _this2.mouseMoveEvent, false);
 	      }, false);
-	      this.canvas.addEventListener('mouseup', function () {
+	      document.getElementById('root').addEventListener('mouseup', function () {
 	        _this2.filter.frequency.value = 22000;
+	        _this2.panner.pan.value = 0;
 	        _this2.canvas.removeEventListener('mousemove', _this2.mouseMoveEvent);
 	      }, false);
 	    }
@@ -48246,6 +48252,16 @@
 	      return _react2.default.createElement(
 	        'div',
 	        { className: 'fx-div' },
+	        _react2.default.createElement(
+	          'div',
+	          null,
+	          'filter'
+	        ),
+	        _react2.default.createElement(
+	          'div',
+	          null,
+	          'panner'
+	        ),
 	        _react2.default.createElement('canvas', { id: 'fx-canvas' })
 	      );
 	    }
