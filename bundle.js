@@ -47843,7 +47843,6 @@
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
 	var _defaultState = {
-	  bpm: 120,
 	  playing: false
 	};
 	
@@ -47851,10 +47850,12 @@
 	  var state = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : _defaultState;
 	  var action = arguments[1];
 	
+	  var newState = void 0;
 	  switch (action.type) {
 	    case _transport_actions.START_STOP:
-	      var newState = (0, _merge2.default)({}, state, { playing: action.playing });
+	      newState = (0, _merge2.default)({}, state, { playing: action.playing });
 	      return newState;
+	
 	    default:
 	      return state;
 	  }
@@ -47887,6 +47888,8 @@
 	
 	var _classnames2 = _interopRequireDefault(_classnames);
 	
+	var _transport_positions = __webpack_require__(297);
+	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
 	function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
@@ -47905,25 +47908,34 @@
 	
 	    var _this = _possibleConstructorReturn(this, (Sequencer.__proto__ || Object.getPrototypeOf(Sequencer)).call(this, props));
 	
+	    _this.triggerSample = _this.triggerSample.bind(_this);
+	    _this.startStop = _this.startStop.bind(_this);
+	    _this.updateSequence = _this.updateSequence.bind(_this);
+	    _this.changeTempo = _this.changeTempo.bind(_this);
+	    _this.positionHighlight = _this.positionHighlight.bind(_this);
+	
 	    _this.sampler1 = new _tone2.default.Sampler("https://s3.amazonaws.com/react-drummachine/BD.WAV").toMaster();
 	    _this.sampler2 = new _tone2.default.Sampler("https://s3.amazonaws.com/react-drummachine/SD.WAV").toMaster();
 	    _this.sampler3 = new _tone2.default.Sampler("https://s3.amazonaws.com/react-drummachine/CH.WAV").toMaster();
 	    _this.sampler4 = new _tone2.default.Sampler("https://s3.amazonaws.com/react-drummachine/CB.WAV").toMaster();
 	
-	    _this.state = {
-	      channel1: [null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null],
-	      channel2: [null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null],
-	      channel3: [null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null],
-	      channel4: [null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null]
-	    };
+	    _this.state = {};
 	
-	    _this.triggerSample = _this.triggerSample.bind(_this);
-	    _this.startStop = _this.startStop.bind(_this);
-	    _this.updateSequence = _this.updateSequence.bind(_this);
+	    for (var i = 1; i < 5; i++) {
+	      _this.state['channel' + i] = [null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null];
+	    }
+	
+	    _this.state.bpm = 120;
+	    _this.state.position = 0;
+	
 	    _this.channel1 = new _tone2.default.Sequence(_this.triggerSample.bind(_this, "sampler1"), _this.state.channel1, "16n").start(0);
 	    _this.channel2 = new _tone2.default.Sequence(_this.triggerSample.bind(_this, "sampler2"), _this.state.channel2, "16n").start(0);
 	    _this.channel3 = new _tone2.default.Sequence(_this.triggerSample.bind(_this, "sampler3"), _this.state.channel3, "16n").start(0);
 	    _this.channel4 = new _tone2.default.Sequence(_this.triggerSample.bind(_this, "sampler4"), _this.state.channel4, "16n").start(0);
+	    _this.timeKeeper = new _tone2.default.Sequence(_this.positionHighlight, [true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true], "16n").start(0);
+	
+	    _tone2.default.Transport.setLoopPoints(0, "1m");
+	    _tone2.default.Transport.loop = true;
 	    return _this;
 	  }
 	
@@ -47931,6 +47943,11 @@
 	    key: 'triggerSample',
 	    value: function triggerSample(sampler) {
 	      this[sampler].triggerAttackRelease(0);
+	    }
+	  }, {
+	    key: 'positionHighlight',
+	    value: function positionHighlight() {
+	      this.setState({ position: _transport_positions.TRANSPORT_POS[_tone2.default.Transport.position] });
 	    }
 	  }, {
 	    key: 'startStop',
@@ -47958,13 +47975,15 @@
 	          stepClass = (0, _classnames2.default)({
 	            "step-button": true,
 	            "step-on": true,
-	            "step-off": false
+	            "step-off": false,
+	            "step-on-active": idx === _this2.state.position
 	          });
 	        } else {
 	          stepClass = (0, _classnames2.default)({
 	            "step-button": true,
 	            "step-on": false,
-	            "step-off": true
+	            "step-off": true,
+	            "step-off-active": idx === _this2.state.position
 	          });
 	        }
 	        return _react2.default.createElement('div', {
@@ -47986,21 +48005,52 @@
 	        oldSeq[idx] = null;
 	        this[channel].remove(idx);
 	      } else {
+	
 	        oldSeq[idx] = true;
 	        this[channel].add(idx, true);
 	      }
 	      this.setState(_defineProperty({}, channel, oldSeq));
 	    }
 	  }, {
+	    key: 'changeTempo',
+	    value: function changeTempo(e) {
+	      var newTempo = parseInt(e.currentTarget.value);
+	      if (isNaN(newTempo)) {
+	        newTempo = 1;
+	      }
+	      _tone2.default.Transport.bpm.value = newTempo;
+	      this.setState({ bpm: newTempo });
+	    }
+	  }, {
 	    key: 'render',
 	    value: function render() {
+	      var playPause = void 0;
+	      if (this.props.playing) {
+	        playPause = _react2.default.createElement('i', { className: 'fa fa-pause', 'aria-hidden': 'true' });
+	      } else {
+	        playPause = _react2.default.createElement('i', { className: 'fa fa-play', 'aria-hidden': 'true' });
+	      }
 	      return _react2.default.createElement(
 	        'div',
-	        null,
+	        { className: 'sequencer' },
 	        _react2.default.createElement(
 	          'div',
-	          { className: 'start-stop', onClick: this.startStop },
-	          'start/stop'
+	          { className: 'sequencer-header' },
+	          _react2.default.createElement(
+	            'div',
+	            { className: 'transport-controls' },
+	            _react2.default.createElement(
+	              'div',
+	              { className: 'start-stop', onClick: this.startStop },
+	              playPause
+	            ),
+	            _react2.default.createElement('input', { type: 'number', className: 'tempo-input', onChange: this.changeTempo, value: this.state.bpm })
+	          ),
+	          _react2.default.createElement(
+	            'h2',
+	            { className: 'sequencer-title' },
+	            'react machine'
+	          )
 	        ),
 	        _react2.default.createElement(
 	          'div',
@@ -48212,6 +48262,7 @@
 	    _tone2.default.Master.chain(_this.filter, _this.panner);
 	    _this.getMousePos = _this.getMousePos.bind(_this);
 	    _this.mouseMoveEvent = _this.mouseMoveEvent.bind(_this);
+	
 	    return _this;
 	  }
 	
@@ -48230,6 +48281,17 @@
 	      var mousePos = this.getMousePos(e);
 	      this.filter.frequency.value = mousePos.y * 30 + 100;
 	      this.panner.pan.value = (mousePos.x - 200) * 0.005;
+	      this.ctx.beginPath();
+	      this.ctx.strokeStyle = "black";
+	      this.ctx.lineWidth = 4;
+	      var lastX = void 0,
+	          lastY = void 0;
+	      this.ctx.moveTo(lastX, lastY);
+	      this.ctx.lineTo(mousePos.x, mousePos.y);
+	      this.ctx.stroke();
+	
+	      lastX = mousePos.x;
+	      lastY = mousePos.y;
 	    }
 	  }, {
 	    key: 'componentDidMount',
@@ -48237,6 +48299,7 @@
 	      var _this2 = this;
 	
 	      this.canvas = document.getElementById("fx-canvas");
+	      this.ctx = this.canvas.getContext("2d");
 	      this.canvas.addEventListener('mousedown', function () {
 	        _this2.canvas.addEventListener('mousemove', _this2.mouseMoveEvent, false);
 	      }, false);
@@ -48271,6 +48334,35 @@
 	}(_react2.default.Component);
 	
 	exports.default = Effects;
+
+/***/ },
+/* 296 */,
+/* 297 */
+/***/ function(module, exports) {
+
+	"use strict";
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	var TRANSPORT_POS = exports.TRANSPORT_POS = {
+	  "0:0:0": 0,
+	  "0:0:1": 1,
+	  "0:0:2": 2,
+	  "0:0:3": 3,
+	  "0:1:0": 4,
+	  "0:1:1": 5,
+	  "0:1:2": 6,
+	  "0:1:3": 7,
+	  "0:2:0": 8,
+	  "0:2:1": 9,
+	  "0:2:2": 10,
+	  "0:2:3": 11,
+	  "0:3:0": 12,
+	  "0:3:1": 13,
+	  "0:3:2": 14,
+	  "0:3:3": 15
+	};
 
 /***/ }
 /******/ ]);

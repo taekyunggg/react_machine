@@ -9,6 +9,7 @@ class Effects extends React.Component {
     Tone.Master.chain(this.filter, this.panner);
     this.getMousePos = this.getMousePos.bind(this);
     this.mouseMoveEvent = this.mouseMoveEvent.bind(this);
+
   }
 
   getMousePos(e) {
@@ -23,10 +24,21 @@ class Effects extends React.Component {
     let mousePos = this.getMousePos(e);
     this.filter.frequency.value = mousePos.y * 30 + 100;
     this.panner.pan.value = (mousePos.x - 200) * 0.005;
+    this.ctx.beginPath();
+    this.ctx.strokeStyle = "black";
+    this.ctx.lineWidth = 4;
+    let lastX, lastY;
+    this.ctx.moveTo(lastX, lastY);
+    this.ctx.lineTo(mousePos.x, mousePos.y);
+    this.ctx.stroke();
+
+    lastX = mousePos.x;
+    lastY = mousePos.y;
   }
 
   componentDidMount(){
     this.canvas = document.getElementById("fx-canvas");
+    this.ctx = this.canvas.getContext("2d");
     this.canvas.addEventListener('mousedown', () => {
       this.canvas.addEventListener(
         'mousemove',

@@ -1,19 +1,123 @@
+html, body, div, span, applet, object, iframe,
+h1, h2, h3, h4, h5, h6, p, blockquote, pre,
+a, abbr, acronym, address, big, cite, code,
+del, dfn, em, img, ins, kbd, q, s, samp,
+small, strike, strong, sub, sup, tt, var,
+b, u, i, center,
+dl, dt, dd, ol, ul, li,
+fieldset, form, label, legend,
+table, caption, tbody, tfoot, thead, tr, th, td,
+article, aside, canvas, details, embed,
+figure, figcaption, footer, header, hgroup,
+menu, nav, output, ruby, section, summary,
+time, mark, audio, video {
+	margin: 0;
+	padding: 0;
+	border: 0;
+	font-size: 100%;
+	font: inherit;
+	vertical-align: baseline;
+}
+/* HTML5 display-role reset for older browsers */
+article, aside, details, figcaption, figure,
+footer, header, hgroup, menu, nav, section {
+	display: block;
+}
+body {
+	line-height: 1;
+  font-family: 'Quicksand', sans-serif;
+}
+ol, ul {
+	list-style: none;
+}
+blockquote, q {
+	quotes: none;
+}
+blockquote:before, blockquote:after,
+q:before, q:after {
+	content: '';
+	content: none;
+}
+table {
+	border-collapse: collapse;
+	border-spacing: 0;
+}
+
+html, body {
+  height: 100%;
+}
+
+#root {
+  background-color: rgb(22, 38, 44);
+  height: 100%;
+}
+
 .drummachine {
+  padding-top: 15px;
   width: 1030px;
   margin: 0 auto;
 }
 
+.sequencer-header {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.transport-controls {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
 .start-stop {
-  width: 100px;
-  height: 50px;
-  text-align: center;
-  border: 1px solid black;
+  width: 70px;
+  height: 40px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border: 2px solid rgb(15, 140, 249);
+  border-radius: 3px;
+}
+
+.start-stop:hover {
+  cursor: pointer;
+  box-shadow: 0 0 10px rgb(18, 90, 149);
+}
+
+.start-stop i {
+  font-size: 20px;
+  color: rgb(15, 140, 249);
+}
+
+.tempo-input {
+  width: 65px;
+  height: 30px;
+  background: black;
+  color: white;
+  border-radius: 3px;
+  margin-left: 10px;
+  font-size: 16px;
+}
+
+.sequencer-title {
+  font-size: 40px;
+  color: rgb(15, 140, 249);
 }
 
 .step-button {
   height: 50px;
   width: 50px;
-  border: 1px solid black;
+  border: 1px solid rgb(18, 90, 149);
+  border-radius: 3px;
+}
+
+.step-button:hover {
+  cursor: pointer;
+  background: rgb(22, 43, 56);
+  box-shadow: 0 0 10px rgb(18, 90, 149);
 }
 
 .channel-row {
@@ -23,9 +127,20 @@
 }
 
 .step-on {
-  background: grey;
+  background: rgb(15, 140, 249);
 }
 
+.step-on:hover {
+  background: rgb(15, 140, 249);
+}
+
+.step-on-active {
+  background: rgb(255, 73, 22);
+}
+
+.step-off-active {
+  background: rgb(138, 55, 33);
+}
 .fx-div {
   height: 400px;
   width: 400px;
