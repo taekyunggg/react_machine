@@ -2,6 +2,7 @@ import React from 'react';
 import Tone from 'tone';
 import classNames from 'classnames';
 import { TRANSPORT_POS } from '../../util/transport_positions';
+import * as samplePacks from '../../util/sample_packs';
 
 class Sequencer extends React.Component {
   constructor(props) {
@@ -11,55 +12,24 @@ class Sequencer extends React.Component {
     this.updateSequence = this.updateSequence.bind(this);
     this.changeTempo = this.changeTempo.bind(this);
     this.positionHighlight = this.positionHighlight.bind(this);
+    this.samplePacks = samplePacks;
 
-    this.sampler1 = new Tone.Sampler(
-      "https://s3.amazonaws.com/react-drummachine/BD.WAV"
-    ).toMaster();
-    this.sampler2 = new Tone.Sampler(
-      "https://s3.amazonaws.com/react-drummachine/SD.WAV"
-    ).toMaster();
-    this.sampler3 = new Tone.Sampler(
-      "https://s3.amazonaws.com/react-drummachine/CH.WAV"
-    ).toMaster();
-    this.sampler4 = new Tone.Sampler(
-      "https://s3.amazonaws.com/react-drummachine/CB.WAV"
-    ).toMaster();
+    this.state = {
+      bpm: 120,
+      position: 0
+    };
 
-    this.state = {};
-
-    for (let i = 1; i < 5; i++) {
+    for (let i = 1; i < 9; i++) {
       this.state[`channel${i}`] = [
         null, null, null, null, null, null, null, null,
         null, null, null, null, null, null, null, null
       ];
+      this.state[`sampler${i}`] = new Tone.Sampler(samplePacks.eightZeroEight[i - 1]).toMaster();
+      this[`channel${i}`] = new Tone.Sequence(
+        this.triggerSample.bind(this, `sampler${i}`),
+        this.state[`channel${i}`],
+        "16n").start(0);
     }
-
-    this.state.bpm = 120;
-    this.state.position = 0;
-
-    this.channel1 = new Tone.Sequence(
-      this.triggerSample.bind(this, "sampler1"),
-      this.state.channel1,
-       "16n").start(0);
-    this.channel2 = new Tone.Sequence(
-      this.triggerSample.bind(this, "sampler2"),
-      this.state.channel2,
-       "16n").start(0);
-    this.channel3 = new Tone.Sequence(
-      this.triggerSample.bind(this, "sampler3"),
-      this.state.channel3,
-       "16n").start(0);
-    this.channel4 = new Tone.Sequence(
-      this.triggerSample.bind(this, "sampler4"),
-      this.state.channel4,
-       "16n").start(0);
-    // this.timeKeeper = new Tone.Sequence(
-    //   this.positionHighlight,
-    //   [
-    //     true, true, true, true, true, true, true, true,
-    //     true, true, true, true, true, true, true, true
-    //   ],
-    //   "16n").start(0);
 
     Tone.Transport.setLoopPoints(0, "1m");
     Tone.Transport.loop = true;
@@ -67,7 +37,7 @@ class Sequencer extends React.Component {
   }
 
   triggerSample(sampler) {
-    this[sampler].triggerAttackRelease(0);
+    this.state[sampler].triggerAttackRelease(0);
   }
 
   positionHighlight() {
@@ -150,6 +120,16 @@ class Sequencer extends React.Component {
     } else {
       playPause = <i className="fa fa-play" aria-hidden="true"></i>;
     }
+
+    let grid = [];
+    for (let i = 1; i < 9; i++) {
+      grid.push(
+        <div className="channel-row" key={i}>
+          { this.channelButtons(`channel${i}`) }
+        </div>
+      );
+    }
+
     return (
       <div className="sequencer">
         <div className="sequencer-header">
@@ -159,18 +139,7 @@ class Sequencer extends React.Component {
           </div>
           <h2 className="sequencer-title">react machine</h2>
         </div>
-        <div className='channel-row'>
-          { this.channelButtons("channel1") }
-        </div>
-        <div className='channel-row'>
-          { this.channelButtons("channel2") }
-        </div>
-        <div className='channel-row'>
-          { this.channelButtons("channel3") }
-        </div>
-        <div className='channel-row'>
-          { this.channelButtons("channel4") }
-        </div>
+        { grid }
 
       </div>
     );

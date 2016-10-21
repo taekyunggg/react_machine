@@ -47890,6 +47890,12 @@
 	
 	var _transport_positions = __webpack_require__(297);
 	
+	var _sample_packs = __webpack_require__(298);
+	
+	var samplePacks = _interopRequireWildcard(_sample_packs);
+	
+	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
+	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
 	function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
@@ -47913,32 +47919,18 @@
 	    _this.updateSequence = _this.updateSequence.bind(_this);
 	    _this.changeTempo = _this.changeTempo.bind(_this);
 	    _this.positionHighlight = _this.positionHighlight.bind(_this);
+	    _this.samplePacks = samplePacks;
 	
-	    _this.sampler1 = new _tone2.default.Sampler("https://s3.amazonaws.com/react-drummachine/BD.WAV").toMaster();
-	    _this.sampler2 = new _tone2.default.Sampler("https://s3.amazonaws.com/react-drummachine/SD.WAV").toMaster();
-	    _this.sampler3 = new _tone2.default.Sampler("https://s3.amazonaws.com/react-drummachine/CH.WAV").toMaster();
-	    _this.sampler4 = new _tone2.default.Sampler("https://s3.amazonaws.com/react-drummachine/CB.WAV").toMaster();
+	    _this.state = {
+	      bpm: 120,
+	      position: 0
+	    };
 	
-	    _this.state = {};
-	
-	    for (var i = 1; i < 5; i++) {
+	    for (var i = 1; i < 9; i++) {
 	      _this.state['channel' + i] = [null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null];
+	      _this.state['sampler' + i] = new _tone2.default.Sampler(samplePacks.eightZeroEight[i - 1]).toMaster();
+	      _this['channel' + i] = new _tone2.default.Sequence(_this.triggerSample.bind(_this, 'sampler' + i), _this.state['channel' + i], "16n").start(0);
 	    }
-	
-	    _this.state.bpm = 120;
-	    _this.state.position = 0;
-	
-	    _this.channel1 = new _tone2.default.Sequence(_this.triggerSample.bind(_this, "sampler1"), _this.state.channel1, "16n").start(0);
-	    _this.channel2 = new _tone2.default.Sequence(_this.triggerSample.bind(_this, "sampler2"), _this.state.channel2, "16n").start(0);
-	    _this.channel3 = new _tone2.default.Sequence(_this.triggerSample.bind(_this, "sampler3"), _this.state.channel3, "16n").start(0);
-	    _this.channel4 = new _tone2.default.Sequence(_this.triggerSample.bind(_this, "sampler4"), _this.state.channel4, "16n").start(0);
-	    // this.timeKeeper = new Tone.Sequence(
-	    //   this.positionHighlight,
-	    //   [
-	    //     true, true, true, true, true, true, true, true,
-	    //     true, true, true, true, true, true, true, true
-	    //   ],
-	    //   "16n").start(0);
 	
 	    _tone2.default.Transport.setLoopPoints(0, "1m");
 	    _tone2.default.Transport.loop = true;
@@ -47949,7 +47941,7 @@
 	  _createClass(Sequencer, [{
 	    key: 'triggerSample',
 	    value: function triggerSample(sampler) {
-	      this[sampler].triggerAttackRelease(0);
+	      this.state[sampler].triggerAttackRelease(0);
 	    }
 	  }, {
 	    key: 'positionHighlight',
@@ -48036,6 +48028,16 @@
 	      } else {
 	        playPause = _react2.default.createElement('i', { className: 'fa fa-play', 'aria-hidden': 'true' });
 	      }
+	
+	      var grid = [];
+	      for (var i = 1; i < 9; i++) {
+	        grid.push(_react2.default.createElement(
+	          'div',
+	          { className: 'channel-row', key: i },
+	          this.channelButtons('channel' + i)
+	        ));
+	      }
+	
 	      return _react2.default.createElement(
 	        'div',
 	        { className: 'sequencer' },
@@ -48058,26 +48060,7 @@
 	            'react machine'
 	          )
 	        ),
-	        _react2.default.createElement(
-	          'div',
-	          { className: 'channel-row' },
-	          this.channelButtons("channel1")
-	        ),
-	        _react2.default.createElement(
-	          'div',
-	          { className: 'channel-row' },
-	          this.channelButtons("channel2")
-	        ),
-	        _react2.default.createElement(
-	          'div',
-	          { className: 'channel-row' },
-	          this.channelButtons("channel3")
-	        ),
-	        _react2.default.createElement(
-	          'div',
-	          { className: 'channel-row' },
-	          this.channelButtons("channel4")
-	        )
+	        grid
 	      );
 	    }
 	  }]);
@@ -48373,6 +48356,17 @@
 	  "0:3:3": 15,
 	  "0:3:4": 0
 	};
+
+/***/ },
+/* 298 */
+/***/ function(module, exports) {
+
+	"use strict";
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	var eightZeroEight = exports.eightZeroEight = ["https://s3.amazonaws.com/react-drummachine/BD.WAV", "https://s3.amazonaws.com/react-drummachine/SD.WAV", "https://s3.amazonaws.com/react-drummachine/CH.WAV", "https://s3.amazonaws.com/react-drummachine/OH.WAV", "https://s3.amazonaws.com/react-drummachine/CB.WAV", "https://s3.amazonaws.com/react-drummachine/CL.WAV", "https://s3.amazonaws.com/react-drummachine/HC.WAV", "https://s3.amazonaws.com/react-drummachine/LC.WAV"];
 
 /***/ }
 /******/ ]);
