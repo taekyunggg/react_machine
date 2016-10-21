@@ -53,16 +53,17 @@ class Sequencer extends React.Component {
       this.triggerSample.bind(this, "sampler4"),
       this.state.channel4,
        "16n").start(0);
-    this.timeKeeper = new Tone.Sequence(
-      this.positionHighlight,
-      [
-        true, true, true, true, true, true, true, true,
-        true, true, true, true, true, true, true, true
-      ],
-      "16n").start(0);
+    // this.timeKeeper = new Tone.Sequence(
+    //   this.positionHighlight,
+    //   [
+    //     true, true, true, true, true, true, true, true,
+    //     true, true, true, true, true, true, true, true
+    //   ],
+    //   "16n").start(0);
 
     Tone.Transport.setLoopPoints(0, "1m");
     Tone.Transport.loop = true;
+    Tone.Transport.scheduleRepeat(this.positionHighlight, "16n");
   }
 
   triggerSample(sampler) {
@@ -70,7 +71,7 @@ class Sequencer extends React.Component {
   }
 
   positionHighlight() {
-    this.setState({ position: TRANSPORT_POS[Tone.Transport.position] });
+    this.setState({ position: TRANSPORT_POS[Tone.Transport.position.slice(0, 5)] });
   }
 
   startStop() {
@@ -125,7 +126,6 @@ class Sequencer extends React.Component {
       oldSeq[idx] = null;
       this[channel].remove(idx);
     } else {
-
       oldSeq[idx] = true;
       this[channel].add(idx, true);
     }

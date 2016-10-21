@@ -47932,10 +47932,17 @@
 	    _this.channel2 = new _tone2.default.Sequence(_this.triggerSample.bind(_this, "sampler2"), _this.state.channel2, "16n").start(0);
 	    _this.channel3 = new _tone2.default.Sequence(_this.triggerSample.bind(_this, "sampler3"), _this.state.channel3, "16n").start(0);
 	    _this.channel4 = new _tone2.default.Sequence(_this.triggerSample.bind(_this, "sampler4"), _this.state.channel4, "16n").start(0);
-	    _this.timeKeeper = new _tone2.default.Sequence(_this.positionHighlight, [true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true], "16n").start(0);
+	    // this.timeKeeper = new Tone.Sequence(
+	    //   this.positionHighlight,
+	    //   [
+	    //     true, true, true, true, true, true, true, true,
+	    //     true, true, true, true, true, true, true, true
+	    //   ],
+	    //   "16n").start(0);
 	
 	    _tone2.default.Transport.setLoopPoints(0, "1m");
 	    _tone2.default.Transport.loop = true;
+	    _tone2.default.Transport.scheduleRepeat(_this.positionHighlight, "16n");
 	    return _this;
 	  }
 	
@@ -47947,7 +47954,7 @@
 	  }, {
 	    key: 'positionHighlight',
 	    value: function positionHighlight() {
-	      this.setState({ position: _transport_positions.TRANSPORT_POS[_tone2.default.Transport.position] });
+	      this.setState({ position: _transport_positions.TRANSPORT_POS[_tone2.default.Transport.position.slice(0, 5)] });
 	    }
 	  }, {
 	    key: 'startStop',
@@ -48005,7 +48012,6 @@
 	        oldSeq[idx] = null;
 	        this[channel].remove(idx);
 	      } else {
-	
 	        oldSeq[idx] = true;
 	        this[channel].add(idx, true);
 	      }
@@ -48350,18 +48356,22 @@
 	  "0:0:1": 1,
 	  "0:0:2": 2,
 	  "0:0:3": 3,
+	  "0:0:4": 4,
 	  "0:1:0": 4,
 	  "0:1:1": 5,
 	  "0:1:2": 6,
 	  "0:1:3": 7,
+	  "0:1:4": 8,
 	  "0:2:0": 8,
 	  "0:2:1": 9,
 	  "0:2:2": 10,
 	  "0:2:3": 11,
+	  "0:2:4": 12,
 	  "0:3:0": 12,
 	  "0:3:1": 13,
 	  "0:3:2": 14,
-	  "0:3:3": 15
+	  "0:3:3": 15,
+	  "0:3:4": 0
 	};
 
 /***/ }
