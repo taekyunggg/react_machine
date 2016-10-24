@@ -21,7 +21,8 @@ class Sequencer extends React.Component {
     this.state = {
       bpm: 106,
       position: 0,
-      volume: 0
+      volume: 0,
+      playing: false
     };
 
     for (let i = 1; i < 9; i++) {
@@ -48,12 +49,12 @@ class Sequencer extends React.Component {
   }
 
   startStop() {
-    if (this.props.playing) {
+    if (this.state.playing) {
       Tone.Transport.stop();
-      this.props.startStop(false);
+      this.setState({ playing: false });
     } else {
       Tone.Transport.start();
-      this.props.startStop(true);
+      this.setState({ playing: true });
     }
   }
 
@@ -141,7 +142,7 @@ class Sequencer extends React.Component {
 
   render() {
     let playPause;
-    if (this.props.playing) {
+    if (this.state.playing) {
       playPause = <i className="fa fa-pause" aria-hidden="true"></i>;
     } else {
       playPause = <i className="fa fa-play" aria-hidden="true"></i>;
