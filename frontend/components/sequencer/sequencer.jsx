@@ -5,7 +5,7 @@ import { TRANSPORT_POS } from '../../util/transport_positions';
 import * as samplePacks from '../../util/sample_packs';
 import injectTapEventPlugin from 'react-tap-event-plugin';
 import Slider from 'material-ui/Slider';
-import { demoTrack } from '../../util/patterns';
+import { demoTrack, nullTrack } from '../../util/patterns';
 
 class Sequencer extends React.Component {
   constructor(props) {
@@ -16,6 +16,7 @@ class Sequencer extends React.Component {
     this.changeTempo = this.changeTempo.bind(this);
     this.positionHighlight = this.positionHighlight.bind(this);
     this.changeVolume = this.changeVolume.bind(this);
+    this.clearPattern = this.clearPattern.bind(this);
     this.samplePacks = samplePacks;
     this.analyser = new Tone.Analyser("fft", 32);
     Tone.Master.fan(this.analyser);
@@ -112,6 +113,20 @@ class Sequencer extends React.Component {
     });
   }
 
+  clearPattern() {
+    for (let i = 1; i < 9; i++) {
+      this.setState({
+        [`channel${i}`]: [
+          null, null, null, null, null, null, null, null,
+          null, null, null, null, null, null, null, null
+        ]
+      });
+      for (let j = 0; j < 16; j++) {
+        this[`channel${i}`].remove(j);
+      }
+    }
+  }
+
   changeTempo(e) {
     let newTempo = parseInt(e.currentTarget.value);
     if (isNaN(newTempo)) {
@@ -182,6 +197,7 @@ class Sequencer extends React.Component {
                 onChange={this.changeVolume}
                 className="master-volume"/>
             </div>
+            <div className="clear-pattern" onClick={this.clearPattern}>Clear</div>
           </div>
           <h2 className="sequencer-title">react machine</h2>
         </div>

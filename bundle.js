@@ -24508,6 +24508,7 @@
 	    _this.changeTempo = _this.changeTempo.bind(_this);
 	    _this.positionHighlight = _this.positionHighlight.bind(_this);
 	    _this.changeVolume = _this.changeVolume.bind(_this);
+	    _this.clearPattern = _this.clearPattern.bind(_this);
 	    _this.samplePacks = samplePacks;
 	    _this.analyser = new _tone2.default.Analyser("fft", 32);
 	    _tone2.default.Master.fan(_this.analyser);
@@ -24606,6 +24607,16 @@
 	      this.setState(_defineProperty({}, channel, oldSeq));
 	    }
 	  }, {
+	    key: 'clearPattern',
+	    value: function clearPattern() {
+	      for (var i = 1; i < 9; i++) {
+	        this.setState(_defineProperty({}, 'channel' + i, [null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null]));
+	        for (var j = 0; j < 16; j++) {
+	          this['channel' + i].remove(j);
+	        }
+	      }
+	    }
+	  }, {
 	    key: 'changeTempo',
 	    value: function changeTempo(e) {
 	      var newTempo = parseInt(e.currentTarget.value);
@@ -24693,6 +24704,11 @@
 	                value: this.state.volume,
 	                onChange: this.changeVolume,
 	                className: 'master-volume' })
+	            ),
+	            _react2.default.createElement(
+	              'div',
+	              { className: 'clear-pattern', onClick: this.clearPattern },
+	              'Clear'
 	            )
 	          ),
 	          _react2.default.createElement(
@@ -56796,6 +56812,8 @@
 	  value: true
 	});
 	var demoTrack = exports.demoTrack = [[true, null, null, true, null, null, null, null, null, null, true, null, null, null, null, null], [null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null], [true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true], [null, null, null, null, true, null, null, null, null, null, null, null, true, null, null, null], [null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null], [true, null, null, true, null, null, true, null, null, null, true, null, true, null, null, null], [null, null, null, null, null, null, null, true, null, null, null, null, null, null, null, null], [null, null, null, null, null, null, null, null, null, null, null, null, null, null, true, null]];
+	
+	var nullTrack = exports.nullTrack = [[null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null], [null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null], [null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null], [null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null], [null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null], [null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null], [null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null], [null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null]];
 
 /***/ },
 /* 470 */

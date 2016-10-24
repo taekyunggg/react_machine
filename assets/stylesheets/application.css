@@ -92,6 +92,24 @@ html, body {
   color: rgb(15, 140, 249);
 }
 
+.clear-pattern {
+	width: 70px;
+	height: 40px;
+	border: 2px solid rgb(15, 140, 249);
+  border-radius: 3px;
+	margin-left: 20px;
+	color: rgb(15, 140, 249);
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+
+.clear-pattern:hover {
+	cursor: pointer;
+	background: rgb(22, 43, 56);
+  box-shadow: 0 0 10px rgb(18, 90, 149);
+}
+
 .tempo-input {
   width: 65px;
   height: 30px;

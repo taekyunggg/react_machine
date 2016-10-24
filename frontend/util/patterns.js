@@ -32,3 +32,38 @@ export const demoTrack = [
     null, null, null, null, null, null, true, null
   ]
 ];
+
+export const nullTrack = [
+  [
+    null, null, null, null, null, null, null, null,
+    null, null, null, null, null, null, null, null
+  ],
+  [
+    null, null, null, null, null, null, null, null,
+    null, null, null, null, null, null, null, null
+  ],
+  [
+    null, null, null, null, null, null, null, null,
+    null, null, null, null, null, null, null, null
+  ],
+  [
+    null, null, null, null, null, null, null, null,
+    null, null, null, null, null, null, null, null
+  ],
+  [
+    null, null, null, null, null, null, null, null,
+    null, null, null, null, null, null, null, null
+  ],
+  [
+    null, null, null, null, null, null, null, null,
+    null, null, null, null, null, null, null, null
+  ],
+  [
+    null, null, null, null, null, null, null, null,
+    null, null, null, null, null, null, null, null
+  ],
+  [
+    null, null, null, null, null, null, null, null,
+    null, null, null, null, null, null, null, null
+  ]
+];
