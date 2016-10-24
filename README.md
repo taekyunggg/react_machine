@@ -1,8 +1,8 @@
 # React Machine
 
-This is a step-sequencer written using React.js, Tone.js, HTML, and CSS.  It features 16 steps and 8 different samples and you can create patterns by activating and deactivating cells within the matrix.  There is also an effects pad which applies effects when the user clicks and drags over the pad.  The Tone.js library is used to handle audio synchronization and triggering of samples.
+This is a step-sequencer written using React.js, Tone.js, HTML, and CSS.  The Tone.js library is used to handle audio synchronization and triggering of samples. It features 16 steps and 8 different samples and you can create patterns by activating and deactivating cells within the matrix.  There is also an effects pad which applies effects when the user clicks and drags over the pad.  The output frequency/amplitude is analyzed and visualized.
 
-![machine](/assets/images/machine.png)
+![machine](/assets/images/drummachine.gif)
 
 ## Technical Features
 
@@ -16,9 +16,13 @@ The effects pad is implemented by using an HTML canvas element.  I created a cus
 
 ![code3](/assets/images/code3.png)
 
+The visualizer element is created by using a Tone.Analyser object, which takes in the Master output and analyses the data and returns it in the form of an array.  I then take this array and divide the different frequencies into 32 different bands and then display the corresponding amplitude of that band as a colored bar in a HTML canvas element.
+
+![visualizer](/assets/images/visualizer.png)
+
+
+
 ## Features to be added
 
 * Additional sample packs to switch between
 * Allow the user to switch the active FX on the pad
-* Add a visualizer on the master audio output
-* Add a demo track

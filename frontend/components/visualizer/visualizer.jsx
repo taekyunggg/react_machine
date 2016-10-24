@@ -11,14 +11,6 @@ class Visualizer extends React.Component {
     this.drawVisualizers = this.drawVisualizers.bind(this);
   }
 
-  componentDidMount() {
-    this.fftCanvas = document.getElementById('fft-canvas');
-    this.fftCtx = this.fftCanvas.getContext('2d');
-    this.fftWidth = this.fftCanvas.width;
-    this.fftHeight = this.fftCanvas.height;
-    this.drawVisualizers();
-  }
-
   drawFft(values) {
     this.fftCtx.clearRect(0, 0, this.fftWidth, this.fftHeight);
     const barWidth = this.fftWidth / this.fftAnalyser.size;
@@ -31,6 +23,15 @@ class Visualizer extends React.Component {
       this.fftCtx.fillRect(x, this.fftHeight - y, barWidth, this.fftHeight);
     }
   }
+  
+  componentDidMount() {
+    this.fftCanvas = document.getElementById('fft-canvas');
+    this.fftCtx = this.fftCanvas.getContext('2d');
+    this.fftWidth = this.fftCanvas.width;
+    this.fftHeight = this.fftCanvas.height;
+    this.drawVisualizers();
+  }
+
 
   drawVisualizers() {
     requestAnimationFrame(this.drawVisualizers);
