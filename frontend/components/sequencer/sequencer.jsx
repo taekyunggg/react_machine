@@ -24,7 +24,7 @@ class Sequencer extends React.Component {
     this.state = {
       bpm: 106,
       position: 0,
-      volume: 0,
+      volume: -10,
       playing: false
     };
 
@@ -41,6 +41,7 @@ class Sequencer extends React.Component {
     Tone.Transport.loop = true;
     Tone.Transport.scheduleRepeat(this.positionHighlight, "16n");
     Tone.Transport.bpm.value = this.state.bpm;
+    Tone.Master.volume.value = this.state.volume;
   }
 
   triggerSample(sampler) {

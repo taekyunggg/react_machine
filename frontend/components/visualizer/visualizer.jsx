@@ -27,7 +27,7 @@ class Visualizer extends React.Component {
       const val = values[i] / 255;
       const x = this.fftWidth * (i / len);
       const y = val * this.fftHeight;
-      this.fftCtx.fillStyle = "rgba(7, 132, 154, " + val + ")";
+      this.fftCtx.fillStyle = "rgba(15, 140, 249, " + val + ")";
       this.fftCtx.fillRect(x, this.fftHeight - y, barWidth, this.fftHeight);
     }
   }

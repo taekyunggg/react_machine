@@ -24516,7 +24516,7 @@
 	    _this.state = {
 	      bpm: 106,
 	      position: 0,
-	      volume: 0,
+	      volume: -10,
 	      playing: false
 	    };
 	
@@ -24530,6 +24530,7 @@
 	    _tone2.default.Transport.loop = true;
 	    _tone2.default.Transport.scheduleRepeat(_this.positionHighlight, "16n");
 	    _tone2.default.Transport.bpm.value = _this.state.bpm;
+	    _tone2.default.Master.volume.value = _this.state.volume;
 	    return _this;
 	  }
 	
@@ -46745,7 +46746,7 @@
 	Object.defineProperty(exports, "__esModule", {
 	  value: true
 	});
-	var eightZeroEight = exports.eightZeroEight = ["https://s3.amazonaws.com/react-drummachine/BD.WAV", "https://s3.amazonaws.com/react-drummachine/SD.WAV", "https://s3.amazonaws.com/react-drummachine/CH.WAV", "https://s3.amazonaws.com/react-drummachine/CP.WAV", "https://s3.amazonaws.com/react-drummachine/CB.WAV", "https://s3.amazonaws.com/react-drummachine/CL.WAV", "https://s3.amazonaws.com/react-drummachine/HC.WAV", "https://s3.amazonaws.com/react-drummachine/LC.WAV"];
+	var eightZeroEight = exports.eightZeroEight = ["../../../assets/samples/BD.WAV", "../../../assets/samples/SD.WAV", "../../../assets/samples/CH.WAV", "../../../assets/samples/CP.WAV", "../../../assets/samples/CB.WAV", "../../../assets/samples/CL.WAV", "../../../assets/samples/HC.WAV", "../../../assets/samples/LC.WAV"];
 	
 	var guitarBeat = exports.guitarBeat = ["https://s3.amazonaws.com/react-drummachine/BD.WAV", "https://s3.amazonaws.com/react-drummachine/SD.WAV", "https://s3.amazonaws.com/react-drummachine/CH.WAV", "https://s3.amazonaws.com/react-drummachine/CP.WAV", "https://s3.amazonaws.com/react-drummachine/CB.WAV", "https://s3.amazonaws.com/react-drummachine/g1.wav", "https://s3.amazonaws.com/react-drummachine/g2.wav", "https://s3.amazonaws.com/react-drummachine/g3.wav"];
 
@@ -50981,7 +50982,8 @@
 	    key: 'initializeCanvas',
 	    value: function initializeCanvas() {
 	      this.ctx.globalCompositeOperation = "source-over";
-	      this.ctx.fillStyle = "rgb(50, 51, 55)";
+	      this.ctx.clearRect(0, 0, 300, 300);
+	      this.ctx.fillStyle = "black";
 	      this.ctx.fillRect(0, 0, 300, 300);
 	    }
 	  }, {
@@ -56812,8 +56814,6 @@
 	  value: true
 	});
 	var demoTrack = exports.demoTrack = [[true, null, null, true, null, null, null, null, null, null, true, null, null, null, null, null], [null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null], [true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true], [null, null, null, null, true, null, null, null, null, null, null, null, true, null, null, null], [null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null], [true, null, null, true, null, null, true, null, null, null, true, null, true, null, null, null], [null, null, null, null, null, null, null, true, null, null, null, null, null, null, null, null], [null, null, null, null, null, null, null, null, null, null, null, null, null, null, true, null]];
-	
-	var nullTrack = exports.nullTrack = [[null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null], [null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null], [null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null], [null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null], [null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null], [null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null], [null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null], [null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null]];
 
 /***/ },
 /* 470 */
@@ -56878,7 +56878,7 @@
 	        var val = values[i] / 255;
 	        var x = this.fftWidth * (i / len);
 	        var y = val * this.fftHeight;
-	        this.fftCtx.fillStyle = "rgba(7, 132, 154, " + val + ")";
+	        this.fftCtx.fillStyle = "rgba(15, 140, 249, " + val + ")";
 	        this.fftCtx.fillRect(x, this.fftHeight - y, barWidth, this.fftHeight);
 	      }
 	    }

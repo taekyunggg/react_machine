@@ -1,12 +1,12 @@
 export const eightZeroEight = [
-  "https://s3.amazonaws.com/react-drummachine/BD.WAV",
-  "https://s3.amazonaws.com/react-drummachine/SD.WAV",
-  "https://s3.amazonaws.com/react-drummachine/CH.WAV",
-  "https://s3.amazonaws.com/react-drummachine/CP.WAV",
-  "https://s3.amazonaws.com/react-drummachine/CB.WAV",
-  "https://s3.amazonaws.com/react-drummachine/CL.WAV",
-  "https://s3.amazonaws.com/react-drummachine/HC.WAV",
-  "https://s3.amazonaws.com/react-drummachine/LC.WAV"
+  "../../../assets/samples/BD.WAV",
+  "../../../assets/samples/SD.WAV",
+  "../../../assets/samples/CH.WAV",
+  "../../../assets/samples/CP.WAV",
+  "../../../assets/samples/CB.WAV",
+  "../../../assets/samples/CL.WAV",
+  "../../../assets/samples/HC.WAV",
+  "../../../assets/samples/LC.WAV"
 ];
 
 export const guitarBeat = [
