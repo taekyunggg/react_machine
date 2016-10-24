@@ -3,6 +3,8 @@ import Tone from 'tone';
 import classNames from 'classnames';
 import { TRANSPORT_POS } from '../../util/transport_positions';
 import * as samplePacks from '../../util/sample_packs';
+import injectTapEventPlugin from 'react-tap-event-plugin';
+import Slider from 'material-ui/Slider';
 
 class Sequencer extends React.Component {
   constructor(props) {
@@ -12,11 +14,13 @@ class Sequencer extends React.Component {
     this.updateSequence = this.updateSequence.bind(this);
     this.changeTempo = this.changeTempo.bind(this);
     this.positionHighlight = this.positionHighlight.bind(this);
+    this.changeVolume = this.changeVolume.bind(this);
     this.samplePacks = samplePacks;
 
     this.state = {
       bpm: 120,
-      position: 0
+      position: 0,
+      volume: 0
     };
 
     for (let i = 1; i < 9; i++) {
@@ -113,6 +117,27 @@ class Sequencer extends React.Component {
     this.setState({bpm: newTempo });
   }
 
+  componentWillMount() {
+    injectTapEventPlugin();
+  }
+
+  componentDidMount() {
+    document.addEventListener('keydown', (e) => {
+      const keyName = e.key;
+      if (keyName === " ") {
+        this.startStop();
+      }
+    });
+  }
+
+  changeVolume(e, value) {
+    this.setState({volume: value });
+    if (value === -40) {
+      value = -10000;
+    }
+    Tone.Master.volume.value = value;
+  }
+
   render() {
     let playPause;
     if (this.props.playing) {
@@ -120,10 +145,18 @@ class Sequencer extends React.Component {
     } else {
       playPause = <i className="fa fa-play" aria-hidden="true"></i>;
     }
+    let volumeIcon;
+    if (this.state.volume > -20) {
+      volumeIcon = <i className="fa fa-volume-up" aria-hidden="true"></i>;
+    } else if (this.state.volume > -40) {
+      volumeIcon = <i className="fa fa-volume-down" aria-hidden="true"></i>;
+    } else {
+      volumeIcon = <i className="fa fa-volume-off" aria-hidden="true"></i>;
+    }
 
-    let grid = [];
+    let sequencerGrid = [];
     for (let i = 1; i < 9; i++) {
-      grid.push(
+      sequencerGrid.push(
         <div className="channel-row" key={i}>
           { this.channelButtons(`channel${i}`) }
         </div>
@@ -136,11 +169,19 @@ class Sequencer extends React.Component {
           <div className="transport-controls">
             <div className="start-stop" onClick={this.startStop}>{playPause}</div>
             <input type="number" className="tempo-input" onChange={this.changeTempo} value={this.state.bpm}></input>
+            <div className="volume-section">
+              { volumeIcon }
+              <Slider
+                min={-40}
+                max={0}
+                value={this.state.volume}
+                onChange={this.changeVolume}
+                className="master-volume"/>
+            </div>
           </div>
           <h2 className="sequencer-title">react machine</h2>
         </div>
-        { grid }
-
+        { sequencerGrid }
       </div>
     );
   }

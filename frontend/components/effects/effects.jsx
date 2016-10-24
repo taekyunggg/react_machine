@@ -1,5 +1,6 @@
 import React from 'react';
 import Tone from 'tone';
+import Circle from '../../util/circle';
 
 class Effects extends React.Component {
   constructor(props) {
@@ -9,7 +10,11 @@ class Effects extends React.Component {
     Tone.Master.chain(this.filter, this.panner);
     this.getMousePos = this.getMousePos.bind(this);
     this.mouseMoveEvent = this.mouseMoveEvent.bind(this);
-
+    this.initializeCanvas = this.initializeCanvas.bind(this);
+    this.canvasTrail = this.canvasTrail.bind(this);
+    this.removeListeners = this.removeListeners.bind(this);
+    this.animationLoop = this.animationLoop.bind(this);
+    this.state = {};
   }
 
   getMousePos(e) {
@@ -22,42 +27,76 @@ class Effects extends React.Component {
 
   mouseMoveEvent(e) {
     let mousePos = this.getMousePos(e);
-    this.filter.frequency.value = mousePos.y * 30 + 100;
-    this.panner.pan.value = (mousePos.x - 200) * 0.005;
-    this.ctx.beginPath();
-    this.ctx.strokeStyle = "black";
-    this.ctx.lineWidth = 4;
-    let lastX, lastY;
-    this.ctx.moveTo(lastX, lastY);
-    this.ctx.lineTo(mousePos.x, mousePos.y);
-    this.ctx.stroke();
 
-    lastX = mousePos.x;
-    lastY = mousePos.y;
+    this.filter.frequency.value = mousePos.y * 28 + 50;
+    this.panner.pan.value = (mousePos.x - 150) * 0.006666666;
+    const canvasPos = this.getPosition(this.canvas);
+
+    this.animationLoop(e.clientX - canvasPos.x, e.clientY - canvasPos.y);
+  }
+
+  getPosition(el) {
+    let xPos = 0;
+    let yPos = 0;
+
+    while (el) {
+      xPos += (el.offsetLeft - el.scrollLeft + el.clientLeft);
+      yPos += (el.offsetTop - el.scrollTop + el.clientTop);
+      el = el.offsetParent;
+    }
+    return {
+      x: xPos,
+      y: yPos
+    };
   }
 
   componentDidMount(){
     this.canvas = document.getElementById("fx-canvas");
     this.ctx = this.canvas.getContext("2d");
+    this.circle = new Circle(this.ctx);
     this.canvas.addEventListener('mousedown', () => {
       this.canvas.addEventListener(
         'mousemove',
         this.mouseMoveEvent,
         false);
     }, false);
-    document.getElementById('root').addEventListener('mouseup', () => {
-      this.filter.frequency.value = 22000;
-      this.panner.pan.value = 0;
-      this.canvas.removeEventListener('mousemove', this.mouseMoveEvent);
-    }, false);
+    document.getElementById('root').addEventListener('mouseup',
+    this.removeListeners, false);
+  }
+
+  removeListeners() {
+    // this.filter.frequency.value = 22000;
+    // this.panner.pan.value = 0;
+    this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+    this.canvas.removeEventListener('mousemove', this.mouseMoveEvent);
+  }
+
+  initializeCanvas() {
+    this.ctx.globalCompositeOperation = "source-over";
+  	this.ctx.fillStyle = "rgb(50, 51, 55)";
+  	this.ctx.fillRect(0, 0, 300, 300);
+  }
+
+  canvasTrail(xPos, yPos) {
+    this.initializeCanvas();
+    this.circle.x = xPos;
+    this.circle.y = yPos;
+    this.circle.draw();
+  }
+
+  animationLoop(xPos, yPos) {
+    this.canvasTrail(xPos, yPos);
+    this.animationId = window.requestAnimationFrame(
+      this.animationLoop.bind(this, xPos, yPos)
+    );
   }
 
   render() {
     return (
       <div className="fx-div">
-        <div>filter</div>
-        <div>panner</div>
-        <canvas id="fx-canvas"></canvas>
+        <div className="fx-name name1">filter</div>
+        <div className="fx-name name2">panner (L/R)</div>
+        <canvas id="fx-canvas" width="300" height="300"></canvas>
       </div>
     );
   }

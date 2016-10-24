@@ -108,7 +108,7 @@ html, body {
 }
 
 .step-button {
-  height: 50px;
+  height: 30px;
   width: 50px;
   border: 1px solid rgb(18, 90, 149);
   border-radius: 3px;
@@ -142,13 +142,62 @@ html, body {
   background: rgb(138, 55, 33);
 }
 .fx-div {
-  height: 400px;
-  width: 400px;
+  height: 300px;
+  width: 300px;
   border: 1px solid black;
+	background: rgb(50, 51, 55);
   cursor: crosshair;
+  position: relative;
+}
+
+.fx-name {
+  position: absolute;
+  color: white;
+  user-select: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+}
+
+.name1 {
+  top: 50%;
+  transform: rotate(-90deg);
+}
+
+.name2 {
+  left: 50%;
+  transform: translateX(-50%);
+  margin-top: 10px;
 }
 
 #fx-canvas {
-  height: 400px;
-  width: 400px;
+  height: 300px;
+  width: 300px;
 }
+
+.master-volume {
+  height: 50px;
+  width: 130px;
+  margin-left: 10px;
+  display: flex;
+  align-items: center;
+}
+
+.master-volume > div {
+  margin: 0 !important;
+}
+
+.volume-section {
+  display: flex;
+  align-items: center;
+  margin-left: 15px;
+}
+
+.volume-section i {
+  font-size: 20px;
+  color: rgb(15, 140, 249);
+  width: 20px;
+}
+
+/*.master-volume div {
+  background: rgb(15, 140, 249) !important;
+}*/
