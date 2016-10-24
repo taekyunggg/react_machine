@@ -5,6 +5,7 @@ import { TRANSPORT_POS } from '../../util/transport_positions';
 import * as samplePacks from '../../util/sample_packs';
 import injectTapEventPlugin from 'react-tap-event-plugin';
 import Slider from 'material-ui/Slider';
+import { demoTrack } from '../../util/patterns';
 
 class Sequencer extends React.Component {
   constructor(props) {
@@ -18,16 +19,13 @@ class Sequencer extends React.Component {
     this.samplePacks = samplePacks;
 
     this.state = {
-      bpm: 120,
+      bpm: 106,
       position: 0,
       volume: 0
     };
 
     for (let i = 1; i < 9; i++) {
-      this.state[`channel${i}`] = [
-        null, null, null, null, null, null, null, null,
-        null, null, null, null, null, null, null, null
-      ];
+      this.state[`channel${i}`] = demoTrack[i - 1];
       this.state[`sampler${i}`] = new Tone.Sampler(samplePacks.eightZeroEight[i - 1]).toMaster();
       this[`channel${i}`] = new Tone.Sequence(
         this.triggerSample.bind(this, `sampler${i}`),
@@ -38,6 +36,7 @@ class Sequencer extends React.Component {
     Tone.Transport.setLoopPoints(0, "1m");
     Tone.Transport.loop = true;
     Tone.Transport.scheduleRepeat(this.positionHighlight, "16n");
+    Tone.Transport.bpm.value = this.state.bpm;
   }
 
   triggerSample(sampler) {
@@ -70,14 +69,16 @@ class Sequencer extends React.Component {
           "step-button": true,
           "step-on": true,
           "step-off": false,
-          "step-on-active": idx === this.state.position
+          "step-on-active": idx === this.state.position,
+          "downbeat": idx % 4 === 0
         });
       } else {
         stepClass = classNames({
           "step-button": true,
           "step-on": false,
           "step-off": true,
-          "step-off-active": idx === this.state.position
+          "step-off-active": idx === this.state.position,
+          "downbeat": idx % 4 === 0
         });
       }
       return (

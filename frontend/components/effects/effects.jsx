@@ -65,7 +65,8 @@ class Effects extends React.Component {
   }
 
   removeListeners() {
-    // this.filter.frequency.value 
+    this.filter.frequency.value = 22000;
+    this.panner.pan.value = 0;
     this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
     this.canvas.removeEventListener('mousemove', this.mouseMoveEvent);
   }

@@ -134,6 +134,10 @@ html, body {
   background: rgb(15, 140, 249);
 }
 
+.downbeat {
+	border: 1px solid rgb(62, 148, 228);
+}
+
 .step-on-active {
   background: rgb(255, 73, 22);
 }
@@ -197,7 +201,3 @@ html, body {
   color: rgb(15, 140, 249);
   width: 20px;
 }
-
-/*.master-volume div {
-  background: rgb(15, 140, 249) !important;
-}*/
