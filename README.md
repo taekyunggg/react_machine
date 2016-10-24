@@ -21,3 +21,4 @@ The effects pad is implemented by using an HTML canvas element.  I created a cus
 * Additional sample packs to switch between
 * Allow the user to switch the active FX on the pad
 * Add a visualizer on the master audio output
+* Add a demo track
