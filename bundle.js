@@ -24398,6 +24398,10 @@
 	
 	var _effects2 = _interopRequireDefault(_effects);
 	
+	var _visualizer = __webpack_require__(470);
+	
+	var _visualizer2 = _interopRequireDefault(_visualizer);
+	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -24422,7 +24426,12 @@
 	        'div',
 	        { className: 'drummachine' },
 	        _react2.default.createElement(_sequencer2.default, null),
-	        _react2.default.createElement(_effects2.default, null)
+	        _react2.default.createElement(
+	          'div',
+	          { className: 'fx-visualizer' },
+	          _react2.default.createElement(_effects2.default, null),
+	          _react2.default.createElement(_visualizer2.default, null)
+	        )
 	      );
 	    }
 	  }]);
@@ -24500,6 +24509,8 @@
 	    _this.positionHighlight = _this.positionHighlight.bind(_this);
 	    _this.changeVolume = _this.changeVolume.bind(_this);
 	    _this.samplePacks = samplePacks;
+	    _this.analyser = new _tone2.default.Analyser("fft", 32);
+	    _tone2.default.Master.fan(_this.analyser);
 	
 	    _this.state = {
 	      bpm: 106,
@@ -56785,6 +56796,92 @@
 	  value: true
 	});
 	var demoTrack = exports.demoTrack = [[true, null, null, true, null, null, null, null, null, null, true, null, null, null, null, null], [null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null], [true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true], [null, null, null, null, true, null, null, null, null, null, null, null, true, null, null, null], [null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null], [true, null, null, true, null, null, true, null, null, null, true, null, true, null, null, null], [null, null, null, null, null, null, null, true, null, null, null, null, null, null, null, null], [null, null, null, null, null, null, null, null, null, null, null, null, null, null, true, null]];
+
+/***/ },
+/* 470 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+	
+	var _react = __webpack_require__(1);
+	
+	var _react2 = _interopRequireDefault(_react);
+	
+	var _tone = __webpack_require__(291);
+	
+	var _tone2 = _interopRequireDefault(_tone);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+	
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+	
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+	
+	var Visualizer = function (_React$Component) {
+	  _inherits(Visualizer, _React$Component);
+	
+	  function Visualizer(props) {
+	    _classCallCheck(this, Visualizer);
+	
+	    var _this = _possibleConstructorReturn(this, (Visualizer.__proto__ || Object.getPrototypeOf(Visualizer)).call(this, props));
+	
+	    _this.fftAnalyser = new _tone2.default.Analyser('fft', 32);
+	    _this.waveAnalyser = new _tone2.default.Analyser('waveform', 1024);
+	    _tone2.default.Master.fan(_this.fftAnalyser, _this.waveAnalyser);
+	    _this.drawFft = _this.drawFft.bind(_this);
+	    _this.drawVisualizers = _this.drawVisualizers.bind(_this);
+	    return _this;
+	  }
+	
+	  _createClass(Visualizer, [{
+	    key: 'componentDidMount',
+	    value: function componentDidMount() {
+	      this.fftCanvas = document.getElementById('fft-canvas');
+	      this.fftCtx = this.fftCanvas.getContext('2d');
+	      this.fftWidth = this.fftCanvas.width;
+	      this.fftHeight = this.fftCanvas.height;
+	      this.drawVisualizers();
+	    }
+	  }, {
+	    key: 'drawFft',
+	    value: function drawFft(values) {
+	      this.fftCtx.clearRect(0, 0, this.fftWidth, this.fftHeight);
+	      var barWidth = this.fftWidth / this.fftAnalyser.size;
+	      var len = values.length;
+	      for (var i = 0; i < len; i++) {
+	        var val = values[i] / 255;
+	        var x = this.fftWidth * (i / len);
+	        var y = val * this.fftHeight;
+	        this.fftCtx.fillStyle = "rgba(7, 132, 154, " + val + ")";
+	        this.fftCtx.fillRect(x, this.fftHeight - y, barWidth, this.fftHeight);
+	      }
+	    }
+	  }, {
+	    key: 'drawVisualizers',
+	    value: function drawVisualizers() {
+	      requestAnimationFrame(this.drawVisualizers);
+	      var fftValues = this.fftAnalyser.analyse();
+	      this.drawFft(fftValues);
+	    }
+	  }, {
+	    key: 'render',
+	    value: function render() {
+	      return _react2.default.createElement('canvas', { className: 'fft', id: 'fft-canvas', height: '300px' });
+	    }
+	  }]);
+	
+	  return Visualizer;
+	}(_react2.default.Component);
+	
+	exports.default = Visualizer;
 
 /***/ }
 /******/ ]);

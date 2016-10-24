@@ -178,6 +178,7 @@ html, body {
   width: 300px;
 }
 
+
 .master-volume {
   height: 50px;
   width: 130px;
@@ -200,4 +201,15 @@ html, body {
   font-size: 20px;
   color: rgb(15, 140, 249);
   width: 20px;
+}
+
+.fft {
+	width: 100%;
+	margin-left: 20px;
+	border: 1px solid rgb(8, 116, 150);
+}
+
+.fx-visualizer {
+	display: flex;
+	flex-direction: row;
 }

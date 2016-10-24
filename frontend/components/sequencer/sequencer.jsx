@@ -17,6 +17,8 @@ class Sequencer extends React.Component {
     this.positionHighlight = this.positionHighlight.bind(this);
     this.changeVolume = this.changeVolume.bind(this);
     this.samplePacks = samplePacks;
+    this.analyser = new Tone.Analyser("fft", 32);
+    Tone.Master.fan(this.analyser);
 
     this.state = {
       bpm: 106,
