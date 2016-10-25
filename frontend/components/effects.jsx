@@ -9,7 +9,7 @@ class Effects extends React.Component {
     this.lpFilter = new Tone.Filter(22000, "lowpass");
     this.hpFilter = new Tone.Filter(0, "highpass");
     this.reverb = new Tone.Freeverb(0.9, 5000);
-    this.phaser = new Tone.Phaser();
+    this.phaser = new Tone.Phaser(5, 5);
     this.phaser.wet.value = 0;
     this.reverb.wet.value = 0;
 
@@ -44,10 +44,12 @@ class Effects extends React.Component {
     if (this.fx1 === this.lpFilter) {
       this.fx1[FxParams['lpFilter']].value = mousePos.y * 28 + 50;
     } else if (this.fx1 === this.hpFilter) {
-      this.fx1[FxParams['hpFilter']].value = mousePos.y * 45;
+      this.fx1[FxParams['hpFilter']].value = mousePos.y * 40;
     }
     if (this.fx2 === this.reverb) {
       this.fx2[FxParams['reverb']].value = mousePos.x * 0.0002;
+    } else if (this.fx2 === this.phaser) {
+      this.fx2[FxParams['phaser']].value = mousePos.x * 0.0033;
     }
     const canvasPos = this.getPosition(this.canvas);
 
@@ -136,12 +138,26 @@ class Effects extends React.Component {
           <canvas id="fx-canvas" width="300" height="300"></canvas>
         </div>
         <div className="fx-selectors">
-          <select onChange={this.changeFx.bind(this, 'fx1')} value={this.state.fx1Active}>
+          <select
+            onChange={this.changeFx.bind(this, 'fx1')}
+            value={this.state.fx1Active}
+            className="fx-selector">
             <option value="lpFilter">
               lowpass filter
             </option>
             <option value="hpFilter">
               highpass filter
+            </option>
+          </select>
+          <select
+            onChange={this.changeFx.bind(this, 'fx2')}
+            value={this.state.fx2Active}
+            className="fx-selector">
+            <option value="reverb">
+              reverb
+            </option>
+            <option value="phaser">
+              phaser
             </option>
           </select>
         </div>

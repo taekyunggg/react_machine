@@ -325,3 +325,15 @@ html, body {
 	font-size: 20px;
 	text-align: center;
 }
+
+.fx-selectors {
+	width: 100%;
+}
+
+.fx-selector {
+	width: 50%;
+	background: black;
+	border: 1px solid white;
+	color: rgb(15, 140, 249);
+	height: 27px;
+}

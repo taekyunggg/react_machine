@@ -54297,7 +54297,7 @@
 	    _this.lpFilter = new _tone2.default.Filter(22000, "lowpass");
 	    _this.hpFilter = new _tone2.default.Filter(0, "highpass");
 	    _this.reverb = new _tone2.default.Freeverb(0.9, 5000);
-	    _this.phaser = new _tone2.default.Phaser();
+	    _this.phaser = new _tone2.default.Phaser(5, 5);
 	    _this.phaser.wet.value = 0;
 	    _this.reverb.wet.value = 0;
 	
@@ -54336,10 +54336,12 @@
 	      if (this.fx1 === this.lpFilter) {
 	        this.fx1[_fxParams2.default['lpFilter']].value = mousePos.y * 28 + 50;
 	      } else if (this.fx1 === this.hpFilter) {
-	        this.fx1[_fxParams2.default['hpFilter']].value = mousePos.y * 45;
+	        this.fx1[_fxParams2.default['hpFilter']].value = mousePos.y * 40;
 	      }
 	      if (this.fx2 === this.reverb) {
 	        this.fx2[_fxParams2.default['reverb']].value = mousePos.x * 0.0002;
+	      } else if (this.fx2 === this.phaser) {
+	        this.fx2[_fxParams2.default['phaser']].value = mousePos.x * 0.0033;
 	      }
 	      var canvasPos = this.getPosition(this.canvas);
 	
@@ -54446,7 +54448,10 @@
 	          { className: 'fx-selectors' },
 	          _react2.default.createElement(
 	            'select',
-	            { onChange: this.changeFx.bind(this, 'fx1'), value: this.state.fx1Active },
+	            {
+	              onChange: this.changeFx.bind(this, 'fx1'),
+	              value: this.state.fx1Active,
+	              className: 'fx-selector' },
 	            _react2.default.createElement(
 	              'option',
 	              { value: 'lpFilter' },
@@ -54456,6 +54461,23 @@
 	              'option',
 	              { value: 'hpFilter' },
 	              'highpass filter'
+	            )
+	          ),
+	          _react2.default.createElement(
+	            'select',
+	            {
+	              onChange: this.changeFx.bind(this, 'fx2'),
+	              value: this.state.fx2Active,
+	              className: 'fx-selector' },
+	            _react2.default.createElement(
+	              'option',
+	              { value: 'reverb' },
+	              'reverb'
+	            ),
+	            _react2.default.createElement(
+	              'option',
+	              { value: 'phaser' },
+	              'phaser'
 	            )
 	          )
 	        )
@@ -56686,7 +56708,7 @@
 	      'Each row represents a different instrument, and you can toggle sounds by clicking on individual squares.  The yellow dials on the left control the volume of each instrument and can be controlled by clicking and dragging or by scrolling.',
 	      _react2.default.createElement('br', null),
 	      _react2.default.createElement('br', null),
-	      'In the bottom left, there is an FX-pad which houses 2 effects that can be controlled via the x and y axis. Click and drag over the pad to activate the effects.'
+	      'In the bottom left, there is an FX-pad which houses 2 effects that can be controlled via the x and y axis. Click and drag over the pad to activate the effects.  You can change the active effect via the dropdown below the pad.'
 	    )
 	  );
 	};

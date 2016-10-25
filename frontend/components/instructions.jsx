@@ -16,7 +16,7 @@ const Instructions = () => (
       <br />
       <br />
       In the bottom left, there is an FX-pad which houses 2 effects that can be controlled via the x and y axis.
-      Click and drag over the pad to activate the effects.
+      Click and drag over the pad to activate the effects.  You can change the active effect via the dropdown below the pad.
     </p>
   </div>
 );
