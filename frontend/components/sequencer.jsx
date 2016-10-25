@@ -1,11 +1,11 @@
 import React from 'react';
 import Tone from 'tone';
 import classNames from 'classnames';
-import { TRANSPORT_POS } from '../../util/transport_positions';
-import * as samplePacks from '../../util/sample_packs';
+import { TRANSPORT_POS } from '../util/transport_positions';
+import * as samplePacks from '../util/sample_packs';
 import injectTapEventPlugin from 'react-tap-event-plugin';
 import Slider from 'material-ui/Slider';
-import { demoTrack, nullTrack } from '../../util/patterns';
+import { demoTrack, nullTrack } from '../util/patterns';
 import Knob from 'react-canvas-knob';
 
 class Sequencer extends React.Component {
@@ -32,7 +32,7 @@ class Sequencer extends React.Component {
     for (let i = 1; i < 9; i++) {
       this.state[`channel${i}`] = demoTrack[i - 1];
       this.state[`sampler${i}`] = new Tone.Sampler(samplePacks.eightZeroEight[i - 1]).toMaster();
-      this.state[`s${i}Volume`] = -10;
+      this.state[`s${i}Volume`] = -5;
       this.state[`sampler${i}`].volume.value = this.state[`s${i}Volume`];
       this[`channel${i}`] = new Tone.Sequence(
         this.triggerSample.bind(this, `sampler${i}`),

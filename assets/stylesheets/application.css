@@ -256,3 +256,64 @@ html, body {
   flex-direction: column;
   width: 100%;
 }
+
+.footer {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	height: 50px;
+	margin-top: 15px;
+	border: 1px solid rgb(25, 86, 161);
+	border-radius: 3px;
+	font-size: 20px;
+	color: rgb(15, 140, 249);
+}
+
+.footer a {
+	color: rgb(151, 173, 198);
+	text-decoration: none;
+}
+
+.footer-el {
+	width: 350px;
+}
+
+.instructions-button {
+	margin-left: 15px;
+	padding: 5px;
+}
+
+.instructions-text {
+	width: 95px;
+	border: 2px solid black;
+	border-radius: 3px;
+	padding: 7px;
+	background: rgb(39, 41, 38);
+	color: white;
+	font-size: 16px
+}
+
+.instructions-text:hover {
+	cursor: pointer;
+	background: rgb(32, 31, 32);
+}
+
+.footer-me-tag {
+	display: flex;
+	justify-content: center;
+}
+
+.footer-github {
+	display: flex;
+	justify-content: flex-end;
+	margin-right: 15px;
+	font-size: 30px;
+}
+
+.myname:hover {
+	text-decoration: underline;
+}
+
+.footer-icon:hover {
+	color: rgb(125, 124, 124);
+}

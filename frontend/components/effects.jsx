@@ -1,6 +1,6 @@
 import React from 'react';
 import Tone from 'tone';
-import Circle from '../../util/circle';
+import Circle from '../util/circle';
 
 class Effects extends React.Component {
   constructor(props) {

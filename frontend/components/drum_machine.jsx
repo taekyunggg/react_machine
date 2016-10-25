@@ -1,7 +1,8 @@
 import React from 'react';
-import Sequencer from './sequencer/sequencer';
-import Effects from './effects/effects';
-import Visualizer from './visualizer/visualizer';
+import Sequencer from './sequencer';
+import Effects from './effects';
+import Visualizer from './visualizer';
+import Footer from './footer';
 
 class DrumMachine extends React.Component {
   render() {
@@ -12,6 +13,7 @@ class DrumMachine extends React.Component {
           <Effects />
           <Visualizer />
         </div>
+        <Footer />
       </div>
     );
   }
