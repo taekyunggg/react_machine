@@ -136,6 +136,9 @@ class Sequencer extends React.Component {
     if (isNaN(newTempo)) {
       newTempo = 1;
     }
+    if (newTempo > 300) {
+      newTempo = 300;
+    }
     Tone.Transport.bpm.value = newTempo;
     this.setState({bpm: newTempo });
   }

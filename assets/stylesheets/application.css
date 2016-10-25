@@ -179,18 +179,20 @@ html, body {
   user-select: none;
   -webkit-user-select: none;
   -moz-user-select: none;
+	width: 0;
+	height: 0;
 
 }
 
-
 .name1 {
-  top: 50%;
+  top: 57%;
+	left: -7%;
   transform: rotate(-90deg);
 }
 
 .name2 {
-  left: 50%;
-  transform: translateX(-50%);
+  left: 40%;
+	top: -10%;
   margin-top: 10px;
 }
 
@@ -235,6 +237,7 @@ html, body {
 .fx-visualizer {
 	display: flex;
 	flex-direction: row;
+	margin-top: 15px;
 }
 
 .volume-knobs {

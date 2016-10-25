@@ -54104,6 +54104,9 @@
 	      if (isNaN(newTempo)) {
 	        newTempo = 1;
 	      }
+	      if (newTempo > 300) {
+	        newTempo = 300;
+	      }
 	      _tone2.default.Transport.bpm.value = newTempo;
 	      this.setState({ bpm: newTempo });
 	    }
@@ -54269,7 +54272,13 @@
 	
 	var _circle2 = _interopRequireDefault(_circle);
 	
+	var _fxParams = __webpack_require__(498);
+	
+	var _fxParams2 = _interopRequireDefault(_fxParams);
+	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 	
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 	
@@ -54285,17 +54294,29 @@
 	
 	    var _this = _possibleConstructorReturn(this, (Effects.__proto__ || Object.getPrototypeOf(Effects)).call(this, props));
 	
-	    _this.filter = new _tone2.default.Filter(22000, "lowpass");
-	    _this.reverb = new _tone2.default.Freeverb(0.8, 5000);
+	    _this.lpFilter = new _tone2.default.Filter(22000, "lowpass");
+	    _this.hpFilter = new _tone2.default.Filter(0, "highpass");
+	    _this.reverb = new _tone2.default.Freeverb(0.9, 5000);
+	    _this.phaser = new _tone2.default.Phaser();
+	    _this.phaser.wet.value = 0;
 	    _this.reverb.wet.value = 0;
-	    _tone2.default.Master.chain(_this.filter, _this.reverb);
+	
+	    _this.fx1 = _this.lpFilter;
+	    _this.fx2 = _this.reverb;
+	    _this.state = {
+	      fx1Active: 'lpFilter',
+	      fx2Active: 'reverb'
+	    };
+	    _tone2.default.Master.chain(_this.fx1, _this.fx2);
+	
 	    _this.getMousePos = _this.getMousePos.bind(_this);
 	    _this.mouseMoveEvent = _this.mouseMoveEvent.bind(_this);
 	    _this.initializeCanvas = _this.initializeCanvas.bind(_this);
 	    _this.canvasTrail = _this.canvasTrail.bind(_this);
 	    _this.removeListeners = _this.removeListeners.bind(_this);
 	    _this.animationLoop = _this.animationLoop.bind(_this);
-	    _this.state = {};
+	    _this.isActiveFx = _this.isActiveFx.bind(_this);
+	    _this.changeFx = _this.changeFx.bind(_this);
 	    return _this;
 	  }
 	
@@ -54312,9 +54333,14 @@
 	    key: 'mouseMoveEvent',
 	    value: function mouseMoveEvent(e) {
 	      var mousePos = this.getMousePos(e);
-	
-	      this.filter.frequency.value = mousePos.y * 28 + 50;
-	      this.reverb.wet.value = mousePos.x * 0.00015;
+	      if (this.fx1 === this.lpFilter) {
+	        this.fx1[_fxParams2.default['lpFilter']].value = mousePos.y * 28 + 50;
+	      } else if (this.fx1 === this.hpFilter) {
+	        this.fx1[_fxParams2.default['hpFilter']].value = mousePos.y * 45;
+	      }
+	      if (this.fx2 === this.reverb) {
+	        this.fx2[_fxParams2.default['reverb']].value = mousePos.x * 0.0002;
+	      }
 	      var canvasPos = this.getPosition(this.canvas);
 	
 	      this.animationLoop(e.clientX - canvasPos.x, e.clientY - canvasPos.y);
@@ -54351,7 +54377,9 @@
 	  }, {
 	    key: 'removeListeners',
 	    value: function removeListeners() {
-	      this.filter.frequency.value = 22000;
+	      this.lpFilter.frequency.value = 22000;
+	      this.hpFilter.frequency.value = 0;
+	      this.phaser.wet.value = 0;
 	      this.reverb.wet.value = 0;
 	      this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
 	      this.canvas.removeEventListener('mousemove', this.mouseMoveEvent);
@@ -54379,22 +54407,58 @@
 	      this.animationId = window.requestAnimationFrame(this.animationLoop.bind(this, xPos, yPos));
 	    }
 	  }, {
+	    key: 'isActiveFx',
+	    value: function isActiveFx(fx, fxNum) {
+	      return this.state[fxNum] === this[fx];
+	    }
+	  }, {
+	    key: 'changeFx',
+	    value: function changeFx(fxNum, e) {
+	      e.preventDefault();
+	      var effect = e.currentTarget.value;
+	      this.setState(_defineProperty({}, fxNum + 'Active', effect));
+	      this[fxNum] = this[effect];
+	      _tone2.default.Master.chain(this.fx1, this.fx2);
+	    }
+	  }, {
 	    key: 'render',
 	    value: function render() {
 	      return _react2.default.createElement(
 	        'div',
-	        { className: 'fx-div' },
+	        { className: 'fx-container' },
 	        _react2.default.createElement(
-	          'p',
-	          { className: 'fx-name name1' },
-	          'filter'
+	          'div',
+	          { className: 'fx-div' },
+	          _react2.default.createElement(
+	            'p',
+	            { className: 'fx-name name1' },
+	            this.state.fx1Active
+	          ),
+	          _react2.default.createElement(
+	            'p',
+	            { className: 'fx-name name2' },
+	            this.state.fx2Active
+	          ),
+	          _react2.default.createElement('canvas', { id: 'fx-canvas', width: '300', height: '300' })
 	        ),
 	        _react2.default.createElement(
-	          'p',
-	          { className: 'fx-name name2' },
-	          'reverb'
-	        ),
-	        _react2.default.createElement('canvas', { id: 'fx-canvas', width: '300', height: '300' })
+	          'div',
+	          { className: 'fx-selectors' },
+	          _react2.default.createElement(
+	            'select',
+	            { onChange: this.changeFx.bind(this, 'fx1'), value: this.state.fx1Active },
+	            _react2.default.createElement(
+	              'option',
+	              { value: 'lpFilter' },
+	              'lowpass filter'
+	            ),
+	            _react2.default.createElement(
+	              'option',
+	              { value: 'hpFilter' },
+	              'highpass filter'
+	            )
+	          )
+	        )
 	      );
 	    }
 	  }]);
@@ -56616,7 +56680,10 @@
 	      'Headphones are recommended.',
 	      _react2.default.createElement('br', null),
 	      _react2.default.createElement('br', null),
-	      'To toggle playback, press the play button, or use the spacebar.  Each row represents a different instrument, and you can toggle sounds by clicking on individual squares.  The yellow dials on the left control the volume of each instrument and can be controlled by clicking and dragging or by scrolling.',
+	      'To toggle playback, press the play button, or use the spacebar.  The number in the top right represents the tempo in beats per minute.',
+	      _react2.default.createElement('br', null),
+	      _react2.default.createElement('br', null),
+	      'Each row represents a different instrument, and you can toggle sounds by clicking on individual squares.  The yellow dials on the left control the volume of each instrument and can be controlled by clicking and dragging or by scrolling.',
 	      _react2.default.createElement('br', null),
 	      _react2.default.createElement('br', null),
 	      'In the bottom left, there is an FX-pad which houses 2 effects that can be controlled via the x and y axis. Click and drag over the pad to activate the effects.'
@@ -56625,6 +56692,24 @@
 	};
 	
 	exports.default = Instructions;
+
+/***/ },
+/* 498 */
+/***/ function(module, exports) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	var FxParams = {
+	  lpFilter: 'frequency',
+	  hpFilter: 'frequency',
+	  reverb: 'wet',
+	  phaser: 'wet'
+	};
+	
+	exports.default = FxParams;
 
 /***/ }
 /******/ ]);
