@@ -48,7 +48,7 @@ html, body {
 }
 
 #root {
-  background-color: rgb(22, 38, 44);
+  background-color: rgb(0, 28, 37);
   height: 100%;
 }
 
@@ -179,7 +179,9 @@ html, body {
   user-select: none;
   -webkit-user-select: none;
   -moz-user-select: none;
+
 }
+
 
 .name1 {
   top: 50%;

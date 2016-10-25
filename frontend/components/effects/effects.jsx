@@ -6,8 +6,9 @@ class Effects extends React.Component {
   constructor(props) {
     super(props);
     this.filter = new Tone.Filter(22000, "lowpass");
-    this.panner = new Tone.Panner(0);
-    Tone.Master.chain(this.filter, this.panner);
+    this.reverb = new Tone.Freeverb(0.8, 5000);
+    this.reverb.wet.value = 0;
+    Tone.Master.chain(this.filter, this.reverb);
     this.getMousePos = this.getMousePos.bind(this);
     this.mouseMoveEvent = this.mouseMoveEvent.bind(this);
     this.initializeCanvas = this.initializeCanvas.bind(this);
@@ -29,7 +30,7 @@ class Effects extends React.Component {
     let mousePos = this.getMousePos(e);
 
     this.filter.frequency.value = mousePos.y * 28 + 50;
-    this.panner.pan.value = (mousePos.x - 150) * 0.006666666;
+    this.reverb.wet.value = mousePos.x * 0.00015;
     const canvasPos = this.getPosition(this.canvas);
 
     this.animationLoop(e.clientX - canvasPos.x, e.clientY - canvasPos.y);
@@ -66,7 +67,7 @@ class Effects extends React.Component {
 
   removeListeners() {
     this.filter.frequency.value = 22000;
-    this.panner.pan.value = 0;
+    this.reverb.wet.value = 0;
     this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
     this.canvas.removeEventListener('mousemove', this.mouseMoveEvent);
   }
@@ -95,8 +96,8 @@ class Effects extends React.Component {
   render() {
     return (
       <div className="fx-div">
-        <div className="fx-name name1">filter</div>
-        <div className="fx-name name2">panner (L/R)</div>
+        <p className="fx-name name1">filter</p>
+        <p className="fx-name name2">reverb</p>
         <canvas id="fx-canvas" width="300" height="300"></canvas>
       </div>
     );

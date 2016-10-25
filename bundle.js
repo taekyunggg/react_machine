@@ -24515,8 +24515,6 @@
 	    _this.clearPattern = _this.clearPattern.bind(_this);
 	    _this.changeSVolume = _this.changeSVolume.bind(_this);
 	    _this.samplePacks = samplePacks;
-	    _this.analyser = new _tone2.default.Analyser("fft", 32);
-	    _tone2.default.Master.fan(_this.analyser);
 	
 	    _this.state = {
 	      bpm: 106,
@@ -50954,8 +50952,9 @@
 	    var _this = _possibleConstructorReturn(this, (Effects.__proto__ || Object.getPrototypeOf(Effects)).call(this, props));
 	
 	    _this.filter = new _tone2.default.Filter(22000, "lowpass");
-	    _this.panner = new _tone2.default.Panner(0);
-	    _tone2.default.Master.chain(_this.filter, _this.panner);
+	    _this.reverb = new _tone2.default.Freeverb(0.8, 5000);
+	    _this.reverb.wet.value = 0;
+	    _tone2.default.Master.chain(_this.filter, _this.reverb);
 	    _this.getMousePos = _this.getMousePos.bind(_this);
 	    _this.mouseMoveEvent = _this.mouseMoveEvent.bind(_this);
 	    _this.initializeCanvas = _this.initializeCanvas.bind(_this);
@@ -50981,7 +50980,7 @@
 	      var mousePos = this.getMousePos(e);
 	
 	      this.filter.frequency.value = mousePos.y * 28 + 50;
-	      this.panner.pan.value = (mousePos.x - 150) * 0.006666666;
+	      this.reverb.wet.value = mousePos.x * 0.00015;
 	      var canvasPos = this.getPosition(this.canvas);
 	
 	      this.animationLoop(e.clientX - canvasPos.x, e.clientY - canvasPos.y);
@@ -51019,7 +51018,7 @@
 	    key: 'removeListeners',
 	    value: function removeListeners() {
 	      this.filter.frequency.value = 22000;
-	      this.panner.pan.value = 0;
+	      this.reverb.wet.value = 0;
 	      this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
 	      this.canvas.removeEventListener('mousemove', this.mouseMoveEvent);
 	    }
@@ -51052,14 +51051,14 @@
 	        'div',
 	        { className: 'fx-div' },
 	        _react2.default.createElement(
-	          'div',
+	          'p',
 	          { className: 'fx-name name1' },
 	          'filter'
 	        ),
 	        _react2.default.createElement(
-	          'div',
+	          'p',
 	          { className: 'fx-name name2' },
-	          'panner (L/R)'
+	          'reverb'
 	        ),
 	        _react2.default.createElement('canvas', { id: 'fx-canvas', width: '300', height: '300' })
 	      );
