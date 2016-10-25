@@ -31,6 +31,7 @@
     "react-canvas-knob": "^0.3.0",
     "react-dom": "^15.3.2",
     "react-knob": "^0.1.0",
+    "react-modal": "^1.5.2",
     "react-redux": "^4.4.5",
     "react-router": "^2.8.1",
     "react-tap-event-plugin": "^1.0.0",
