@@ -54510,6 +54510,12 @@
 	
 	var _reactModal2 = _interopRequireDefault(_reactModal);
 	
+	var _instruction_style = __webpack_require__(496);
+	
+	var _instructions = __webpack_require__(497);
+	
+	var _instructions2 = _interopRequireDefault(_instructions);
+	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -54572,12 +54578,9 @@
 	          _reactModal2.default,
 	          {
 	            isOpen: this.state.instructionOpen,
-	            onRequestClose: this.toggleInstructions.bind(this, false) },
-	          _react2.default.createElement(
-	            'div',
-	            null,
-	            'hello'
-	          )
+	            onRequestClose: this.toggleInstructions.bind(this, false),
+	            style: _instruction_style.instructionStyle },
+	          _react2.default.createElement(_instructions2.default, null)
 	        )
 	      );
 	    }
@@ -56550,6 +56553,78 @@
 	  else this.add(className)
 	}
 
+
+/***/ },
+/* 496 */
+/***/ function(module, exports) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	var instructionStyle = exports.instructionStyle = {
+	  overlay: {
+	    position: 'fixed',
+	    top: 0,
+	    left: 0,
+	    right: 0,
+	    bottom: 0,
+	    backgroundColor: 'rgba(0, 0, 0, 0.75)'
+	  },
+	  content: {
+	    position: 'fixed',
+	    top: '30%',
+	    bottom: 'auto',
+	    left: '50%',
+	    right: 'auto',
+	    borderRadius: '2px',
+	    minHeight: '10rem',
+	    padding: '2rem',
+	    transform: 'translate(-50%,-50%)',
+	    width: '400px',
+	    backgroundColor: 'rgb(19, 30, 43)',
+	    color: 'rgb(15, 140, 249)'
+	  }
+	};
+
+/***/ },
+/* 497 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	
+	var _react = __webpack_require__(1);
+	
+	var _react2 = _interopRequireDefault(_react);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	var Instructions = function Instructions() {
+	  return _react2.default.createElement(
+	    'div',
+	    { className: 'instructions' },
+	    _react2.default.createElement(
+	      'p',
+	      null,
+	      'Welcome to React Machine! ',
+	      _react2.default.createElement('br', null),
+	      'Headphones are recommended.',
+	      _react2.default.createElement('br', null),
+	      _react2.default.createElement('br', null),
+	      'To toggle playback, press the play button, or use the spacebar.  Each row represents a different instrument, and you can toggle sounds by clicking on individual squares.  The yellow dials on the left control the volume of each instrument and can be controlled by clicking and dragging or by scrolling.',
+	      _react2.default.createElement('br', null),
+	      _react2.default.createElement('br', null),
+	      'In the bottom left, there is an FX-pad which houses 2 effects that can be controlled via the x and y axis. Click and drag over the pad to activate the effects.'
+	    )
+	  );
+	};
+	
+	exports.default = Instructions;
 
 /***/ }
 /******/ ]);

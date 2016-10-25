@@ -1,5 +1,7 @@
 import React from 'react';
 import Modal from 'react-modal';
+import { instructionStyle } from '../util/instruction_style';
+import Instructions from './instructions';
 
 class Footer extends React.Component {
   constructor(props) {
@@ -30,8 +32,9 @@ class Footer extends React.Component {
         </a>
         <Modal
           isOpen={this.state.instructionOpen}
-          onRequestClose={this.toggleInstructions.bind(this, false)} >
-          <div>hello</div>
+          onRequestClose={this.toggleInstructions.bind(this, false)}
+          style={instructionStyle} >
+          <Instructions />
         </Modal>
 
       </footer>

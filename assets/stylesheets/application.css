@@ -317,3 +317,8 @@ html, body {
 .footer-icon:hover {
 	color: rgb(125, 124, 124);
 }
+
+.instructions {
+	font-size: 20px;
+	text-align: center;
+}
