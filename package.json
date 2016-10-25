@@ -28,6 +28,7 @@
     "material-ui": "^0.16.1",
     "normalize.css": "^5.0.0",
     "react": "^15.3.2",
+    "react-canvas-knob": "^0.3.0",
     "react-dom": "^15.3.2",
     "react-knob": "^0.1.0",
     "react-redux": "^4.4.5",

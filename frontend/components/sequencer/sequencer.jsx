@@ -6,6 +6,7 @@ import * as samplePacks from '../../util/sample_packs';
 import injectTapEventPlugin from 'react-tap-event-plugin';
 import Slider from 'material-ui/Slider';
 import { demoTrack, nullTrack } from '../../util/patterns';
+import Knob from 'react-canvas-knob';
 
 class Sequencer extends React.Component {
   constructor(props) {
@@ -17,6 +18,7 @@ class Sequencer extends React.Component {
     this.positionHighlight = this.positionHighlight.bind(this);
     this.changeVolume = this.changeVolume.bind(this);
     this.clearPattern = this.clearPattern.bind(this);
+    this.changeSVolume = this.changeSVolume.bind(this);
     this.samplePacks = samplePacks;
     this.analyser = new Tone.Analyser("fft", 32);
     Tone.Master.fan(this.analyser);
@@ -25,12 +27,15 @@ class Sequencer extends React.Component {
       bpm: 106,
       position: 0,
       volume: -10,
-      playing: false
+      playing: false,
+
     };
 
     for (let i = 1; i < 9; i++) {
       this.state[`channel${i}`] = demoTrack[i - 1];
       this.state[`sampler${i}`] = new Tone.Sampler(samplePacks.eightZeroEight[i - 1]).toMaster();
+      this.state[`s${i}Volume`] = -10;
+      this.state[`sampler${i}`].volume.value = this.state[`s${i}Volume`];
       this[`channel${i}`] = new Tone.Sequence(
         this.triggerSample.bind(this, `sampler${i}`),
         this.state[`channel${i}`],
@@ -152,10 +157,20 @@ class Sequencer extends React.Component {
 
   changeVolume(e, value) {
     this.setState({volume: value });
-    if (value === -40) {
+    if (value < -39) {
       value = -10000;
     }
     Tone.Master.volume.value = value;
+  }
+
+
+  changeSVolume(sampler, e) {
+    const stateVolume = sampler[0] + sampler[7] + 'Volume';
+    this.setState({ [stateVolume]: e });
+    if (e < -49) {
+      e = -10000;
+    }
+    this.state[sampler].volume.value = e;
   }
 
   render() {
@@ -175,13 +190,28 @@ class Sequencer extends React.Component {
     }
 
     let sequencerGrid = [];
+    let volumeKnobs = [];
     for (let i = 1; i < 9; i++) {
       sequencerGrid.push(
         <div className="channel-row" key={i}>
           { this.channelButtons(`channel${i}`) }
         </div>
       );
+      volumeKnobs.push(
+        <div className='volume-knob' key={i}>
+          <Knob
+            value={this.state[`s${i}Volume`]}
+            width={30}
+            height={30}
+            max={0}
+            min={-50}
+            thickness={0.30}
+            displayInput={false}
+            onChange={this.changeSVolume.bind(this, `sampler${i}`)} />
+        </div>
+      );
     }
+
 
     return (
       <div className="sequencer">
@@ -202,7 +232,14 @@ class Sequencer extends React.Component {
           </div>
           <h2 className="sequencer-title">react machine</h2>
         </div>
-        { sequencerGrid }
+        <div className="input-matrix">
+          <div className="volume-knobs" >
+            { volumeKnobs }
+          </div>
+          <div className="sequencer-grid">
+            { sequencerGrid }
+          </div>
+        </div>
       </div>
     );
   }

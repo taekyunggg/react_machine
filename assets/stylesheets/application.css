@@ -54,7 +54,7 @@ html, body {
 
 .drummachine {
   padding-top: 15px;
-  width: 1030px;
+  width: 1080px;
   margin: 0 auto;
 }
 
@@ -233,4 +233,24 @@ html, body {
 .fx-visualizer {
 	display: flex;
 	flex-direction: row;
+}
+
+.volume-knobs {
+	display: flex;
+	flex-direction: column;
+	margin-right: 10px
+}
+
+.volume-knob {
+	margin-bottom: 10px;
+}
+
+.input-matrix {
+	display: flex;
+}
+
+.sequencer-grid {
+	display: flex;
+  flex-direction: column;
+  width: 100%;
 }
