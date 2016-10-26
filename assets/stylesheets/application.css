@@ -45,10 +45,10 @@ table {
 
 html, body {
   height: 100%;
+	background-color: rgb(0, 28, 37);
 }
 
 #root {
-  background-color: rgb(0, 28, 37);
   height: 100%;
 }
 

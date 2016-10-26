@@ -56702,7 +56702,7 @@
 	      'Headphones are recommended.',
 	      _react2.default.createElement('br', null),
 	      _react2.default.createElement('br', null),
-	      'To toggle playback, press the play button, or use the spacebar.  The number in the top right represents the tempo in beats per minute.',
+	      'To toggle playback, press the play button, or use the spacebar.  The number in the top left represents the tempo in beats per minute.',
 	      _react2.default.createElement('br', null),
 	      _react2.default.createElement('br', null),
 	      'Each row represents a different instrument, and you can toggle sounds by clicking on individual squares.  The yellow dials on the left control the volume of each instrument and can be controlled by clicking and dragging or by scrolling.',

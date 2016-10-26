@@ -7,7 +7,7 @@ const Instructions = () => (
       Headphones are recommended.
       <br />
       <br />
-      To toggle playback, press the play button, or use the spacebar.  The number in the top right represents the tempo in beats per minute.
+      To toggle playback, press the play button, or use the spacebar.  The number in the top left represents the tempo in beats per minute.
       <br />
       <br />
       Each row represents a different instrument, and you can toggle sounds by clicking on individual squares.  The
