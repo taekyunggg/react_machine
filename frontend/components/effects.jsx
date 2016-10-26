@@ -46,7 +46,7 @@ class Effects extends React.Component {
     if (this.fx1 === this.lpFilter) {
       this.fx1[FxParams['lpFilter']].value = mousePos.y * 28 + 50;
     } else if (this.fx1 === this.hpFilter) {
-      this.fx1[FxParams['hpFilter']].value = mousePos.y * 40;
+      this.fx1[FxParams['hpFilter']].value = mousePos.y * 25;
     }
     if (this.fx2 === this.reverb) {
       this.fx2[FxParams['reverb']].value = mousePos.x * 0.0002;
@@ -118,7 +118,7 @@ class Effects extends React.Component {
   canvasTrail(xPos, yPos) {
     this.initializeCanvas();
     for(let i = 0; i < this.circles.length; i++) {
-  		var c1 = this.circles[i],
+  		let c1 = this.circles[i],
   			c2 = this.circles[i-1];
 
   		this.circles[this.circles.length - 1].draw();

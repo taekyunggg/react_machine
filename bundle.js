@@ -48426,7 +48426,7 @@
 	      if (this.fx1 === this.lpFilter) {
 	        this.fx1[_fxParams2.default['lpFilter']].value = mousePos.y * 28 + 50;
 	      } else if (this.fx1 === this.hpFilter) {
-	        this.fx1[_fxParams2.default['hpFilter']].value = mousePos.y * 40;
+	        this.fx1[_fxParams2.default['hpFilter']].value = mousePos.y * 25;
 	      }
 	      if (this.fx2 === this.reverb) {
 	        this.fx2[_fxParams2.default['reverb']].value = mousePos.x * 0.0002;
