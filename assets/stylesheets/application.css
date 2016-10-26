@@ -353,6 +353,10 @@ html, body {
 	box-shadow: 0 0 20px rgb(255, 136, 51);
 }
 
+.fx-container {
+	height: 229px;
+}
+
 .visualizers {
 	position: relative;
 }
