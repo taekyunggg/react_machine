@@ -41,7 +41,7 @@ class Visualizer extends React.Component {
 
   render() {
     return (
-      <canvas className='fft' id="fft-canvas" height="200px"></canvas>
+      <canvas className='fft' id="fft-canvas" height="229px"></canvas>
     );
   }
 }

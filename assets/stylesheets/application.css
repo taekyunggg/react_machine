@@ -228,7 +228,8 @@ html, body {
 }
 
 .fft {
-	width: 100%;
+	width: 858px;
+	height: 229px;
 	margin-left: 20px;
 	border: 1px solid rgb(50, 140, 249);
 	background: black;

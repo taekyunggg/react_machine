@@ -48746,7 +48746,7 @@
 	  }, {
 	    key: 'render',
 	    value: function render() {
-	      return _react2.default.createElement('canvas', { className: 'fft', id: 'fft-canvas', height: '200px' });
+	      return _react2.default.createElement('canvas', { className: 'fft', id: 'fft-canvas', height: '229px' });
 	    }
 	  }]);
 	
