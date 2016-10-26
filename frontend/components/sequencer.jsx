@@ -26,7 +26,6 @@ class Sequencer extends React.Component {
       position: 0,
       volume: 0,
       playing: false,
-
     };
 
     for (let i = 1; i < 9; i++) {

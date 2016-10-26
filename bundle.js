@@ -21628,7 +21628,6 @@
 	      position: 0,
 	      volume: 0,
 	      playing: false
-	
 	    };
 	
 	    for (var i = 1; i < 9; i++) {
