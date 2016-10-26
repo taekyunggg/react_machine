@@ -77,6 +77,10 @@ class Effects extends React.Component {
     this.fxHighlight = document.getElementById('fx-highlighter');
     this.ctx = this.canvas.getContext("2d");
     this.circle = new Circle(this.ctx);
+    this.circles = [];
+    for (let i = 0; i < 5; i++) {
+      this.circles.push(new Circle(this.ctx));
+    }
     this.canvas.addEventListener('mousedown', (e) => {
       this.canvas.classList.add("canvas-active");
       this.fxHighlight.classList.add("highlight-active");
@@ -113,9 +117,23 @@ class Effects extends React.Component {
 
   canvasTrail(xPos, yPos) {
     this.initializeCanvas();
-    this.circle.x = xPos;
-    this.circle.y = yPos;
-    this.circle.draw();
+    for(let i = 0; i < this.circles.length; i++) {
+  		var c1 = this.circles[i],
+  			c2 = this.circles[i-1];
+
+  		this.circles[this.circles.length - 1].draw();
+
+  		if(xPos && yPos) {
+  			this.circles[this.circles.length - 1].x = xPos;
+  			this.circles[this.circles.length - 1].y = yPos;
+   			c1.draw();
+  		}
+
+  		if(i > 0) {
+  			c2.x += (c1.x - c2.x) * 0.6;
+  			c2.y += (c1.y - c2.y) * 0.6;
+  		}
+  	}
   }
 
   animationLoop(xPos, yPos) {
