@@ -21626,7 +21626,7 @@
 	    _this.state = {
 	      bpm: 106,
 	      position: 0,
-	      volume: -10,
+	      volume: 0,
 	      playing: false
 	
 	    };
@@ -48709,7 +48709,9 @@
 	    _this.waveAnalyser = new _tone2.default.Analyser('waveform', 1024);
 	    _tone2.default.Master.fan(_this.fftAnalyser, _this.waveAnalyser);
 	    _this.drawFft = _this.drawFft.bind(_this);
+	    _this.drawWave = _this.drawWave.bind(_this);
 	    _this.drawVisualizers = _this.drawVisualizers.bind(_this);
+	    _this.toggleVisualizer = _this.toggleVisualizer.bind(_this);
 	    return _this;
 	  }
 	
@@ -48728,12 +48730,37 @@
 	      }
 	    }
 	  }, {
+	    key: 'drawWave',
+	    value: function drawWave(values) {
+	      this.waveformCtx.clearRect(0, 0, this.waveformWidth, this.waveformHeight);
+	      values = this.waveAnalyser.analyse();
+	      this.waveformCtx.beginPath();
+	      this.waveformCtx.lineJoin = "round";
+	      this.waveformCtx.lineWidth = 6;
+	      this.waveformCtx.strokeStyle = this.waveformGradient;
+	      this.waveformCtx.moveTo(0, values[0] / 255 * this.waveformHeight);
+	      for (var i = 1, len = values.length; i < len; i++) {
+	        var val = values[i] / 255;
+	        var x = this.waveformWidth * (i / len);
+	        var y = val * this.waveformHeight;
+	        this.waveformCtx.lineTo(x, y);
+	      }
+	      this.waveformCtx.stroke();
+	    }
+	  }, {
 	    key: 'componentDidMount',
 	    value: function componentDidMount() {
 	      this.fftCanvas = document.getElementById('fft-canvas');
 	      this.fftCtx = this.fftCanvas.getContext('2d');
 	      this.fftWidth = this.fftCanvas.width;
 	      this.fftHeight = this.fftCanvas.height;
+	      this.waveformCanvas = document.getElementById('waveform-canvas');
+	      this.waveformCtx = this.waveformCanvas.getContext('2d');
+	      this.waveformWidth = this.waveformCanvas.width;
+	      this.waveformHeight = this.waveformCanvas.height;
+	      this.waveformGradient = this.waveformCtx.createLinearGradient(0, 0, this.waveformWidth, this.waveformHeight);
+	      this.waveformGradient.addColorStop(0, "rgb(15, 140, 249)");
+	      this.waveformGradient.addColorStop(1, "#000");
 	      this.drawVisualizers();
 	    }
 	  }, {
@@ -48741,12 +48768,47 @@
 	    value: function drawVisualizers() {
 	      requestAnimationFrame(this.drawVisualizers);
 	      var fftValues = this.fftAnalyser.analyse();
+	      var waveValues = this.waveAnalyser.analyse();
 	      this.drawFft(fftValues);
+	      this.drawWave(waveValues);
+	    }
+	  }, {
+	    key: 'toggleVisualizer',
+	    value: function toggleVisualizer(e) {
+	      var fft = document.getElementById('fft-canvas');
+	      var wave = document.getElementById('waveform-canvas');
+	      fft.classList.toggle("hidden");
+	      wave.classList.toggle("hidden");
 	    }
 	  }, {
 	    key: 'render',
 	    value: function render() {
-	      return _react2.default.createElement('canvas', { className: 'fft', id: 'fft-canvas', height: '229px' });
+	      return _react2.default.createElement(
+	        'div',
+	        { className: 'visualizers' },
+	        _react2.default.createElement(
+	          'div',
+	          { className: 'visualizer-labels' },
+	          _react2.default.createElement(
+	            'div',
+	            {
+	              className: 'visualizer-label',
+	              id: 'fa-tab',
+	              onClick: this.toggleVisualizer },
+	            'Frequency/Amplitude'
+	          ),
+	          _react2.default.createElement(
+	            'div',
+	            {
+	              className: 'visualizer-label',
+	              id: 'wave-tab',
+	              onClick: this.toggleVisualizer },
+	            'Waveform'
+	          )
+	        ),
+	        _react2.default.createElement('canvas', { className: 'fft', id: 'fft-canvas', height: '229px' }),
+	        _react2.default.createElement('canvas', { className: 'waveform hidden', id: 'waveform-canvas', height: '229px' })
+	      );
 	    }
 	  }]);
 	

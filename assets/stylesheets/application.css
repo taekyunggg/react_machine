@@ -227,13 +227,17 @@ html, body {
   width: 20px;
 }
 
-.fft {
+.fft, .waveform {
 	width: 858px;
 	height: 229px;
 	margin-left: 20px;
 	border: 1px solid rgb(50, 140, 249);
 	background: black;
 	border-radius: 3px;
+}
+
+.hidden {
+	display: none;
 }
 
 .fx-visualizer {
@@ -342,9 +346,39 @@ html, body {
 
 .canvas-active {
 	background: transparent;
-	cursor: crosshair;
+	cursor: none;
 }
 
 .highlight-active {
 	box-shadow: 0 0 20px rgb(255, 136, 51);
+}
+
+.visualizers {
+	position: relative;
+}
+
+.visualizer-labels {
+	position: absolute;
+	display: flex;
+	top: -19px;
+	left: 20px;
+	border: 1px solid rgb(50, 140, 249);
+	border-radius: 2px;
+}
+
+.visualizer-label {
+	color: white;
+	font-size: 14px;
+	padding: 2px 5px;
+	background: rgb(23, 43, 48);
+}
+
+.visualizer-label:hover {
+	cursor: pointer;
+	color: rgb(15, 95, 129);
+
+}
+
+#fa-tab {
+	border-right: 1px solid rgb(50, 140, 249);
 }

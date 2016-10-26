@@ -24,7 +24,7 @@ class Sequencer extends React.Component {
     this.state = {
       bpm: 106,
       position: 0,
-      volume: -10,
+      volume: 0,
       playing: false,
 
     };
