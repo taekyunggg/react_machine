@@ -43,15 +43,18 @@ class Effects extends React.Component {
 
   mouseMoveEvent(e) {
     let mousePos = this.getMousePos(e);
+    if (mousePos.y < 1) {
+      mousePos.y = 1;
+    }
     if (this.fx1 === this.lpFilter) {
-      this.fx1[FxParams['lpFilter']].value = mousePos.y * 28 + 50;
+      this.fx1[FxParams['lpFilter']].value = mousePos.y * 35 + 50;
     } else if (this.fx1 === this.hpFilter) {
-      this.fx1[FxParams['hpFilter']].value = mousePos.y * 25;
+      this.fx1[FxParams['hpFilter']].value = mousePos.y * 50;
     }
     if (this.fx2 === this.reverb) {
-      this.fx2[FxParams['reverb']].value = mousePos.x * 0.0002;
+      this.fx2[FxParams['reverb']].value = mousePos.x * 0.0003;
     } else if (this.fx2 === this.phaser) {
-      this.fx2[FxParams['phaser']].value = mousePos.x * 0.0033;
+      this.fx2[FxParams['phaser']].value = mousePos.x * 0.0048;
     }
     const canvasPos = this.getPosition(this.canvas);
     this.setState({ mouseX: e.clientX - canvasPos.x, mouseY:e.clientY - canvasPos.y});
@@ -163,7 +166,7 @@ class Effects extends React.Component {
         <div className="fx-div">
           <p className="fx-name name1">{this.state.fx1Active}</p>
           <p className="fx-name name2">{this.state.fx2Active}</p>
-          <canvas id="fx-canvas" width="300" height="300"></canvas>
+          <canvas id="fx-canvas" width="200" height="200"></canvas>
         </div>
         <div className="fx-selectors">
           <select

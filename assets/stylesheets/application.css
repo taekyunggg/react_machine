@@ -17,6 +17,10 @@ time, mark, audio, video {
 	font-size: 100%;
 	font: inherit;
 	vertical-align: baseline;
+	-webkit-user-select: none;
+	-moz-user-select: none;
+	-ms-user-select: none;
+	user-select: none;
 }
 /* HTML5 display-role reset for older browsers */
 article, aside, details, figcaption, figure,
@@ -164,8 +168,8 @@ html, body {
   background: rgb(138, 55, 33);
 }
 .fx-div {
-  height: 300px;
-  width: 300px;
+  height: 200px;
+  width: 200px;
   border: 1px solid rgb(50, 140, 249);
 	border-radius: 2px;
 	background: black;
@@ -176,29 +180,26 @@ html, body {
 .fx-name {
   position: absolute;
   color: white;
-  user-select: none;
-  -webkit-user-select: none;
-  -moz-user-select: none;
 	width: 0;
 	height: 0;
 
 }
 
 .name1 {
-  top: 57%;
-	left: -7%;
+  top: 65%;
+	left: -11%;
   transform: rotate(-90deg);
 }
 
 .name2 {
-  left: 40%;
-	top: -10%;
+  left: 38%;
+	top: -15%;
   margin-top: 10px;
 }
 
 #fx-canvas {
-  height: 300px;
-  width: 300px;
+  height: 200px;
+  width: 200px;
 }
 
 
@@ -232,10 +233,6 @@ html, body {
 	border: 1px solid rgb(50, 140, 249);
 	background: black;
 	border-radius: 3px;
-	-webkit-user-select: none;
-	-moz-user-select: none;
-	-ms-user-select: none;
-	user-select: none;
 }
 
 .fx-visualizer {

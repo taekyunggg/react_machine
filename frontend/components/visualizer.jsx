@@ -23,7 +23,7 @@ class Visualizer extends React.Component {
       this.fftCtx.fillRect(x, this.fftHeight - y, barWidth, this.fftHeight);
     }
   }
-  
+
   componentDidMount() {
     this.fftCanvas = document.getElementById('fft-canvas');
     this.fftCtx = this.fftCanvas.getContext('2d');
@@ -41,7 +41,7 @@ class Visualizer extends React.Component {
 
   render() {
     return (
-      <canvas className='fft' id="fft-canvas" height="300px"></canvas>
+      <canvas className='fft' id="fft-canvas" height="200px"></canvas>
     );
   }
 }
