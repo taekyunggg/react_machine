@@ -53,7 +53,7 @@ class Effects extends React.Component {
     }
     const canvasPos = this.getPosition(this.canvas);
 
-    this.animationLoop(e.clientX - canvasPos.x, e.clientY - canvasPos.y);
+    // this.animationLoop(e.clientX - canvasPos.x, e.clientY - canvasPos.y);
   }
 
   getPosition(el) {
@@ -92,6 +92,7 @@ class Effects extends React.Component {
     this.reverb.wet.value = 0;
     this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
     this.canvas.removeEventListener('mousemove', this.mouseMoveEvent);
+    // window.cancelAnimationFrame(this.animationId);
   }
 
   initializeCanvas() {

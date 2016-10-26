@@ -53999,11 +53999,11 @@
 	    };
 	
 	    for (var i = 1; i < 9; i++) {
-	      _this.state['channel' + i] = _patterns.demoTrack[i - 1];
+	      _this['channel' + i] = _patterns.demoTrack[i - 1];
 	      _this.state['sampler' + i] = new _tone2.default.Sampler(samplePacks.eightZeroEight[i - 1]).toMaster();
 	      _this.state['s' + i + 'Volume'] = -5;
 	      _this.state['sampler' + i].volume.value = _this.state['s' + i + 'Volume'];
-	      _this['channel' + i] = new _tone2.default.Sequence(_this.triggerSample.bind(_this, 'sampler' + i), _this.state['channel' + i], "16n").start(0);
+	      _this['channelSequence' + i] = new _tone2.default.Sequence(_this.triggerSample.bind(_this, 'sampler' + i), _this['channel' + i], "16n").start(0);
 	    }
 	
 	    _tone2.default.Transport.setLoopPoints(0, "1m");
@@ -54046,7 +54046,7 @@
 	      }
 	      var buttons = buttonIdx.map(function (idx) {
 	        var stepClass = void 0;
-	        if (_this2.state[channel][idx]) {
+	        if (_this2[channel][idx]) {
 	          stepClass = (0, _classnames2.default)({
 	            "step-button": true,
 	            "step-on": true,
@@ -54077,25 +54077,26 @@
 	    value: function updateSequence(e) {
 	      var channel = e.currentTarget.dataset.channel;
 	      var idx = parseInt(e.currentTarget.dataset.idx);
-	      var oldSeq = this.state[channel];
+	      var oldSeq = this[channel];
 	      if (oldSeq[idx]) {
 	        oldSeq[idx] = null;
-	        this[channel].remove(idx);
+	        this['channelSequence' + channel[7]].remove(idx);
 	      } else {
 	        oldSeq[idx] = true;
-	        this[channel].add(idx, true);
+	        this['channelSequence' + channel[7]].add(idx, true);
 	      }
-	      this.setState(_defineProperty({}, channel, oldSeq));
+	      this[channel] = oldSeq;
 	    }
 	  }, {
 	    key: 'clearPattern',
 	    value: function clearPattern() {
 	      for (var i = 1; i < 9; i++) {
-	        this.setState(_defineProperty({}, 'channel' + i, [null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null]));
+	        this['channel' + i] = [null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null];
 	        for (var j = 0; j < 16; j++) {
-	          this['channel' + i].remove(j);
+	          this['channelSequence' + i].remove(j);
 	        }
 	      }
+	      this.forceUpdate();
 	    }
 	  }, {
 	    key: 'changeTempo',
@@ -54345,7 +54346,7 @@
 	      }
 	      var canvasPos = this.getPosition(this.canvas);
 	
-	      this.animationLoop(e.clientX - canvasPos.x, e.clientY - canvasPos.y);
+	      // this.animationLoop(e.clientX - canvasPos.x, e.clientY - canvasPos.y);
 	    }
 	  }, {
 	    key: 'getPosition',
@@ -54385,6 +54386,7 @@
 	      this.reverb.wet.value = 0;
 	      this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
 	      this.canvas.removeEventListener('mousemove', this.mouseMoveEvent);
+	      // window.cancelAnimationFrame(this.animationId);
 	    }
 	  }, {
 	    key: 'initializeCanvas',

@@ -30,13 +30,13 @@ class Sequencer extends React.Component {
     };
 
     for (let i = 1; i < 9; i++) {
-      this.state[`channel${i}`] = demoTrack[i - 1];
+      this[`channel${i}`] = demoTrack[i - 1];
       this.state[`sampler${i}`] = new Tone.Sampler(samplePacks.eightZeroEight[i - 1]).toMaster();
       this.state[`s${i}Volume`] = -5;
       this.state[`sampler${i}`].volume.value = this.state[`s${i}Volume`];
-      this[`channel${i}`] = new Tone.Sequence(
+      this[`channelSequence${i}`] = new Tone.Sequence(
         this.triggerSample.bind(this, `sampler${i}`),
-        this.state[`channel${i}`],
+        this[`channel${i}`],
         "16n").start(0);
     }
 
@@ -72,7 +72,7 @@ class Sequencer extends React.Component {
     }
     const buttons = buttonIdx.map((idx) => {
       let stepClass;
-      if (this.state[channel][idx]) {
+      if (this[channel][idx]) {
         stepClass = classNames({
           "step-button": true,
           "step-on": true,
@@ -104,31 +104,29 @@ class Sequencer extends React.Component {
   updateSequence(e) {
     const channel = e.currentTarget.dataset.channel;
     const idx = parseInt(e.currentTarget.dataset.idx);
-    const oldSeq = this.state[channel];
+    const oldSeq = this[channel];
     if (oldSeq[idx]){
       oldSeq[idx] = null;
-      this[channel].remove(idx);
+      this[`channelSequence${channel[7]}`].remove(idx);
     } else {
       oldSeq[idx] = true;
-      this[channel].add(idx, true);
+      this[`channelSequence${channel[7]}`].add(idx, true);
     }
-    this.setState({
-      [channel]: oldSeq
-    });
+    this[channel] = oldSeq;
+
   }
 
   clearPattern() {
     for (let i = 1; i < 9; i++) {
-      this.setState({
-        [`channel${i}`]: [
+      this[`channel${i}`] = [
           null, null, null, null, null, null, null, null,
           null, null, null, null, null, null, null, null
-        ]
-      });
+        ];
       for (let j = 0; j < 16; j++) {
-        this[`channel${i}`].remove(j);
+        this[`channelSequence${i}`].remove(j);
       }
     }
+    this.forceUpdate();
   }
 
   changeTempo(e) {
