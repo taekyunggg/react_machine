@@ -50839,7 +50839,7 @@
 	  },
 	  content: {
 	    position: 'fixed',
-	    top: '30%',
+	    top: '50%',
 	    bottom: 'auto',
 	    left: '50%',
 	    right: 'auto',
