@@ -21633,9 +21633,9 @@
 	
 	    for (var i = 1; i < 9; i++) {
 	      _this['channel' + i] = _patterns.demoTrack[i - 1];
-	      _this.state['sampler' + i] = new _tone2.default.Sampler(samplePacks.eightZeroEight[i - 1]).toMaster();
+	      _this['sampler' + i] = new _tone2.default.Sampler(samplePacks.eightZeroEight[i - 1]).toMaster();
 	      _this.state['s' + i + 'Volume'] = -5;
-	      _this.state['sampler' + i].volume.value = _this.state['s' + i + 'Volume'];
+	      _this['sampler' + i].volume.value = _this.state['s' + i + 'Volume'];
 	      _this['channelSequence' + i] = new _tone2.default.Sequence(_this.triggerSample.bind(_this, 'sampler' + i), _this['channel' + i], "16n").start(0);
 	    }
 	
@@ -21650,7 +21650,7 @@
 	  _createClass(Sequencer, [{
 	    key: 'triggerSample',
 	    value: function triggerSample(sampler) {
-	      this.state[sampler].triggerAttackRelease(0);
+	      this[sampler].triggerAttackRelease(0);
 	    }
 	  }, {
 	    key: 'positionHighlight',
@@ -21778,7 +21778,7 @@
 	      if (e < -49) {
 	        e = -10000;
 	      }
-	      this.state[sampler].volume.value = e;
+	      this[sampler].volume.value = e;
 	    }
 	  }, {
 	    key: 'render',

@@ -31,9 +31,9 @@ class Sequencer extends React.Component {
 
     for (let i = 1; i < 9; i++) {
       this[`channel${i}`] = demoTrack[i - 1];
-      this.state[`sampler${i}`] = new Tone.Sampler(samplePacks.eightZeroEight[i - 1]).toMaster();
+      this[`sampler${i}`] = new Tone.Sampler(samplePacks.eightZeroEight[i - 1]).toMaster();
       this.state[`s${i}Volume`] = -5;
-      this.state[`sampler${i}`].volume.value = this.state[`s${i}Volume`];
+      this[`sampler${i}`].volume.value = this.state[`s${i}Volume`];
       this[`channelSequence${i}`] = new Tone.Sequence(
         this.triggerSample.bind(this, `sampler${i}`),
         this[`channel${i}`],
@@ -48,7 +48,7 @@ class Sequencer extends React.Component {
   }
 
   triggerSample(sampler) {
-    this.state[sampler].triggerAttackRelease(0);
+    this[sampler].triggerAttackRelease(0);
   }
 
   positionHighlight() {
@@ -169,7 +169,7 @@ class Sequencer extends React.Component {
     if (e < -49) {
       e = -10000;
     }
-    this.state[sampler].volume.value = e;
+    this[sampler].volume.value = e;
   }
 
   render() {
