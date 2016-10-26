@@ -17,7 +17,9 @@ class Effects extends React.Component {
     this.fx2 = this.reverb;
     this.state = {
       fx1Active: 'lpFilter',
-      fx2Active: 'reverb'
+      fx2Active: 'reverb',
+      mouseX: 0,
+      mouseY: 0
     };
     Tone.Master.chain(this.fx1, this.fx2);
 
@@ -52,8 +54,7 @@ class Effects extends React.Component {
       this.fx2[FxParams['phaser']].value = mousePos.x * 0.0033;
     }
     const canvasPos = this.getPosition(this.canvas);
-
-    // this.animationLoop(e.clientX - canvasPos.x, e.clientY - canvasPos.y);
+    this.setState({ mouseX: e.clientX - canvasPos.x, mouseY:e.clientY - canvasPos.y});
   }
 
   getPosition(el) {
@@ -73,9 +74,15 @@ class Effects extends React.Component {
 
   componentDidMount(){
     this.canvas = document.getElementById("fx-canvas");
+    this.fxHighlight = document.getElementById('fx-highlighter');
     this.ctx = this.canvas.getContext("2d");
     this.circle = new Circle(this.ctx);
-    this.canvas.addEventListener('mousedown', () => {
+    this.canvas.addEventListener('mousedown', (e) => {
+      this.canvas.classList.add("canvas-active");
+      this.fxHighlight.classList.add("highlight-active");
+      let mousePos = this.getMousePos(e);
+      const canvasPos = this.getPosition(this.canvas);
+      this.animationLoop(e.clientX - canvasPos.x, e.clientY - canvasPos.y);
       this.canvas.addEventListener(
         'mousemove',
         this.mouseMoveEvent,
@@ -90,9 +97,11 @@ class Effects extends React.Component {
     this.hpFilter.frequency.value = 0;
     this.phaser.wet.value = 0;
     this.reverb.wet.value = 0;
+    this.canvas.classList.remove("canvas-active");
+    this.fxHighlight.classList.remove("highlight-active");
     this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
     this.canvas.removeEventListener('mousemove', this.mouseMoveEvent);
-    // window.cancelAnimationFrame(this.animationId);
+    window.cancelAnimationFrame(this.animationId);
   }
 
   initializeCanvas() {
@@ -110,9 +119,9 @@ class Effects extends React.Component {
   }
 
   animationLoop(xPos, yPos) {
-    this.canvasTrail(xPos, yPos);
+    this.canvasTrail(this.state.mouseX, this.state.mouseY);
     this.animationId = window.requestAnimationFrame(
-      this.animationLoop.bind(this, xPos, yPos)
+      this.animationLoop.bind(this, this.state.mouseX, this.state.mouseY)
     );
   }
 
@@ -132,7 +141,7 @@ class Effects extends React.Component {
 
   render() {
     return (
-      <div className="fx-container" >
+      <div className="fx-container" id="fx-highlighter">
         <div className="fx-div">
           <p className="fx-name name1">{this.state.fx1Active}</p>
           <p className="fx-name name2">{this.state.fx2Active}</p>

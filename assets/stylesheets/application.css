@@ -169,7 +169,7 @@ html, body {
   border: 1px solid rgb(50, 140, 249);
 	border-radius: 2px;
 	background: black;
-  cursor: crosshair;
+  cursor: pointer;
   position: relative;
 }
 
@@ -232,6 +232,10 @@ html, body {
 	border: 1px solid rgb(50, 140, 249);
 	background: black;
 	border-radius: 3px;
+	-webkit-user-select: none;
+	-moz-user-select: none;
+	-ms-user-select: none;
+	user-select: none;
 }
 
 .fx-visualizer {
@@ -336,4 +340,13 @@ html, body {
 	border: 1px solid white;
 	color: rgb(15, 140, 249);
 	height: 27px;
+}
+
+.canvas-active {
+	background: transparent;
+	cursor: crosshair;
+}
+
+.highlight-active {
+	box-shadow: 0 0 20px rgb(255, 136, 51);
 }
