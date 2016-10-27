@@ -1,9 +1,11 @@
 import React from 'react';
 import Tone from 'tone';
+import classNames from 'classnames';
 
 class Visualizer extends React.Component {
   constructor(props) {
     super(props);
+    this.state = { activeVis: "fft" };
     this.fftAnalyser = new Tone.Analyser('fft', 32);
     this.waveAnalyser = new Tone.Analyser('waveform', 1024);
     Tone.Master.fan(this.fftAnalyser, this.waveAnalyser);
@@ -67,32 +69,41 @@ class Visualizer extends React.Component {
     this.drawWave(waveValues);
   }
 
-  toggleVisualizer(e) {
-    const fft = document.getElementById('fft-canvas');
-    const wave = document.getElementById('waveform-canvas');
-    fft.classList.toggle("hidden");
-    wave.classList.toggle("hidden");
+  toggleVisualizer(visualizer, e) {
+    if (visualizer === "fft") {
+      this.setState({ activeVis: "fft" });
+    } else if (visualizer === "wave") {
+      this.setState({ activeVis: "wave" });
+    }
   }
 
   render() {
+    const fftClasses = classNames({
+      fft: true,
+      hidden: this.state.activeVis !== "fft"
+    });
+    const waveClasses = classNames({
+      waveform: true,
+      hidden: this.state.activeVis !== "wave"
+    });
     return (
       <div className="visualizers">
         <div className="visualizer-labels">
           <div
             className="visualizer-label"
             id="fa-tab"
-            onClick={this.toggleVisualizer}>
+            onClick={this.toggleVisualizer.bind(this, "fft")}>
             Frequency/Amplitude
           </div>
           <div
             className="visualizer-label"
             id="wave-tab"
-            onClick={this.toggleVisualizer}>
+            onClick={this.toggleVisualizer.bind(this, "wave")}>
             Waveform
           </div>
         </div>
-        <canvas className='fft' id="fft-canvas" height="229px"></canvas>
-        <canvas className='waveform hidden' id="waveform-canvas" height="229px"></canvas>
+        <canvas className={fftClasses} id="fft-canvas" height="229px"></canvas>
+        <canvas className={waveClasses} id="waveform-canvas" height="229px"></canvas>
       </div>
     );
   }

@@ -68,8 +68,6 @@
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
-	window.Tone = _tone2.default;
-	
 	document.addEventListener("DOMContentLoaded", function () {
 	  var root = document.getElementById('root');
 	  _reactModal2.default.setAppElement(document.body);
@@ -48481,7 +48479,7 @@
 	    key: 'removeListeners',
 	    value: function removeListeners() {
 	      this.lpFilter.frequency.value = 22000;
-	      this.hpFilter.frequency.value = 0;
+	      this.hpFilter.frequency.value = 1;
 	      this.phaser.wet.value = 0;
 	      this.reverb.wet.value = 0;
 	      this.canvas.classList.remove("canvas-active");
@@ -48688,6 +48686,10 @@
 	
 	var _tone2 = _interopRequireDefault(_tone);
 	
+	var _classnames = __webpack_require__(176);
+	
+	var _classnames2 = _interopRequireDefault(_classnames);
+	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -48704,6 +48706,7 @@
 	
 	    var _this = _possibleConstructorReturn(this, (Visualizer.__proto__ || Object.getPrototypeOf(Visualizer)).call(this, props));
 	
+	    _this.state = { activeVis: "fft" };
 	    _this.fftAnalyser = new _tone2.default.Analyser('fft', 32);
 	    _this.waveAnalyser = new _tone2.default.Analyser('waveform', 1024);
 	    _tone2.default.Master.fan(_this.fftAnalyser, _this.waveAnalyser);
@@ -48773,15 +48776,24 @@
 	    }
 	  }, {
 	    key: 'toggleVisualizer',
-	    value: function toggleVisualizer(e) {
-	      var fft = document.getElementById('fft-canvas');
-	      var wave = document.getElementById('waveform-canvas');
-	      fft.classList.toggle("hidden");
-	      wave.classList.toggle("hidden");
+	    value: function toggleVisualizer(visualizer, e) {
+	      if (visualizer === "fft") {
+	        this.setState({ activeVis: "fft" });
+	      } else if (visualizer === "wave") {
+	        this.setState({ activeVis: "wave" });
+	      }
 	    }
 	  }, {
 	    key: 'render',
 	    value: function render() {
+	      var fftClasses = (0, _classnames2.default)({
+	        fft: true,
+	        hidden: this.state.activeVis !== "fft"
+	      });
+	      var waveClasses = (0, _classnames2.default)({
+	        waveform: true,
+	        hidden: this.state.activeVis !== "wave"
+	      });
 	      return _react2.default.createElement(
 	        'div',
 	        { className: 'visualizers' },
@@ -48793,7 +48805,7 @@
 	            {
 	              className: 'visualizer-label',
 	              id: 'fa-tab',
-	              onClick: this.toggleVisualizer },
+	              onClick: this.toggleVisualizer.bind(this, "fft") },
 	            'Frequency/Amplitude'
 	          ),
 	          _react2.default.createElement(
@@ -48801,12 +48813,12 @@
 	            {
 	              className: 'visualizer-label',
 	              id: 'wave-tab',
-	              onClick: this.toggleVisualizer },
+	              onClick: this.toggleVisualizer.bind(this, "wave") },
 	            'Waveform'
 	          )
 	        ),
-	        _react2.default.createElement('canvas', { className: 'fft', id: 'fft-canvas', height: '229px' }),
-	        _react2.default.createElement('canvas', { className: 'waveform hidden', id: 'waveform-canvas', height: '229px' })
+	        _react2.default.createElement('canvas', { className: fftClasses, id: 'fft-canvas', height: '229px' }),
+	        _react2.default.createElement('canvas', { className: waveClasses, id: 'waveform-canvas', height: '229px' })
 	      );
 	    }
 	  }]);

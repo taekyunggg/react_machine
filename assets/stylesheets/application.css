@@ -342,7 +342,9 @@ html, body {
 	border: 1px solid white;
 	color: rgb(15, 140, 249);
 	height: 27px;
+	font-family: 'Quicksand', sans-serif;
 }
+
 
 .canvas-active {
 	background: transparent;

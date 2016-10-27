@@ -101,7 +101,7 @@ class Effects extends React.Component {
 
   removeListeners() {
     this.lpFilter.frequency.value = 22000;
-    this.hpFilter.frequency.value = 0;
+    this.hpFilter.frequency.value = 1;
     this.phaser.wet.value = 0;
     this.reverb.wet.value = 0;
     this.canvas.classList.remove("canvas-active");
