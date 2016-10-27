@@ -21625,7 +21625,8 @@
 	      bpm: 106,
 	      position: 0,
 	      volume: 0,
-	      playing: false
+	      playing: false,
+	      key: 0
 	    };
 	
 	    for (var i = 1; i < 9; i++) {
@@ -21716,6 +21717,7 @@
 	        this['channelSequence' + channel[7]].add(idx, true);
 	      }
 	      this[channel] = oldSeq;
+	      this.setState({ key: Math.random() });
 	    }
 	  }, {
 	    key: 'clearPattern',

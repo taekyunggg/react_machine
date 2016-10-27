@@ -26,6 +26,7 @@ class Sequencer extends React.Component {
       position: 0,
       volume: 0,
       playing: false,
+      key: 0
     };
 
     for (let i = 1; i < 9; i++) {
@@ -112,7 +113,7 @@ class Sequencer extends React.Component {
       this[`channelSequence${channel[7]}`].add(idx, true);
     }
     this[channel] = oldSeq;
-
+    this.setState({ key: Math.random() });
   }
 
   clearPattern() {
