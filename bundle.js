@@ -58,10 +58,6 @@
 	
 	var _root2 = _interopRequireDefault(_root);
 	
-	var _tone = __webpack_require__(175);
-	
-	var _tone2 = _interopRequireDefault(_tone);
-	
 	var _reactModal = __webpack_require__(300);
 	
 	var _reactModal2 = _interopRequireDefault(_reactModal);

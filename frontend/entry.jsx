@@ -1,7 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import Root from './components/root';
-import Tone from 'tone';
 import Modal from 'react-modal';
 
 document.addEventListener("DOMContentLoaded", () => {
