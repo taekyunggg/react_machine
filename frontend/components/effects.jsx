@@ -41,15 +41,17 @@ class Effects extends React.Component {
     };
   }
 
+  // Seems to be a math question. If you are willing to settle for 1 Hz as the lowest frequency (infra sound), use freq = exp10 (i / (200.0 / log10 (22000.0)) which is approximately freq = exp10 (i / 46.057). If the starting point must be 0 Hz, you could tweak to freq = exp10(i/46.057)-1.0
+
   mouseMoveEvent(e) {
     let mousePos = this.getMousePos(e);
     if (mousePos.y < 1) {
       mousePos.y = 1;
     }
     if (this.fx1 === this.lpFilter) {
-      this.fx1[FxParams['lpFilter']].value = mousePos.y * 35 + 50;
+      this.fx1[FxParams['lpFilter']].value = Math.pow(10, (mousePos.y / 46.057)) + 500;
     } else if (this.fx1 === this.hpFilter) {
-      this.fx1[FxParams['hpFilter']].value = mousePos.y * 50;
+      this.fx1[FxParams['hpFilter']].value = Math.pow(10, (mousePos.y / 46.057));
     }
     if (this.fx2 === this.reverb) {
       this.fx2[FxParams['reverb']].value = mousePos.x * 0.0003;

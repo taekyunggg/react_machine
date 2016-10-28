@@ -21700,6 +21700,19 @@
 	      return buttons;
 	    }
 	  }, {
+	    key: 'soloMuteButtons',
+	    value: function soloMuteButtons() {
+	      var volButtons = [];
+	      for (var i = 1; i < 9; i++) {
+	        volButtons.push(_react2.default.createElement(
+	          'div',
+	          { className: 'solo-mute' },
+	          _react2.default.createElement('div', { className: 'solo', onClick: this.solo.bind(this, 'channel' + i) }),
+	          _react2.default.createElement('div', { className: 'mute', onClick: this.solo.bind(this, 'channel' + i) })
+	        ));
+	      }
+	    }
+	  }, {
 	    key: 'updateSequence',
 	    value: function updateSequence(e) {
 	      var channel = e.currentTarget.dataset.channel;
@@ -48414,6 +48427,9 @@
 	        y: e.clientY - rect.top
 	      };
 	    }
+	
+	    // Seems to be a math question. If you are willing to settle for 1 Hz as the lowest frequency (infra sound), use freq = exp10 (i / (200.0 / log10 (22000.0)) which is approximately freq = exp10 (i / 46.057). If the starting point must be 0 Hz, you could tweak to freq = exp10(i/46.057)-1.0
+	
 	  }, {
 	    key: 'mouseMoveEvent',
 	    value: function mouseMoveEvent(e) {
@@ -48422,9 +48438,9 @@
 	        mousePos.y = 1;
 	      }
 	      if (this.fx1 === this.lpFilter) {
-	        this.fx1[_fxParams2.default['lpFilter']].value = mousePos.y * 35 + 50;
+	        this.fx1[_fxParams2.default['lpFilter']].value = Math.pow(10, mousePos.y / 46.057) + 500;
 	      } else if (this.fx1 === this.hpFilter) {
-	        this.fx1[_fxParams2.default['hpFilter']].value = mousePos.y * 50;
+	        this.fx1[_fxParams2.default['hpFilter']].value = Math.pow(10, mousePos.y / 46.057);
 	      }
 	      if (this.fx2 === this.reverb) {
 	        this.fx2[_fxParams2.default['reverb']].value = mousePos.x * 0.0003;

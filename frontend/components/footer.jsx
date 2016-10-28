@@ -14,8 +14,6 @@ class Footer extends React.Component {
     this.setState({ instructionOpen: bool });
   }
 
-
-
   render() {
     return (
       <footer className="footer">

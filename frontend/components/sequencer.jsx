@@ -101,6 +101,18 @@ class Sequencer extends React.Component {
     return buttons;
   }
 
+  soloMuteButtons() {
+    const volButtons = [];
+    for (let i = 1; i < 9; i++) {
+      volButtons.push(
+        <div className="solo-mute">
+          <div className="solo" onClick={this.solo.bind(this, `channel${i}`)}></div>
+          <div className="mute" onClick={this.solo.bind(this, `channel${i}`)}></div>
+        </div>
+      );
+    }
+  }
+
   updateSequence(e) {
     const channel = e.currentTarget.dataset.channel;
     const idx = parseInt(e.currentTarget.dataset.idx);
