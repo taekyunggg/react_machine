@@ -175,7 +175,7 @@ class Sequencer extends React.Component {
           });
           this.preSoloVol[`sampler${i + 1}`] = this.state[`s${i + 1}Volume`];
           if (this.state[`s${i + 1}Volume`] > -50) {
-            this.muteSampler(`sampler${i + 1}`);
+            this.muteSampler(`sampler${i + 1}`, e);
           }
         }
       }
@@ -183,6 +183,8 @@ class Sequencer extends React.Component {
   }
 
   muteSampler(sampler, e) {
+    e.currentTarget.focus();
+    e.currentTarget.blur();
     if (this.state[`s${sampler[7]}Volume`] > -50) {
       this.preMuteVol[sampler] = this.state[`s${sampler[7]}Volume`];
       this.setState({

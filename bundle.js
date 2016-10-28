@@ -21785,7 +21785,7 @@
 	            this.setState((_setState4 = {}, _defineProperty(_setState4, 'sampler' + (_i + 1) + 'Solo', false), _defineProperty(_setState4, 'sampler' + (_i + 1) + 'Disable', true), _setState4));
 	            this.preSoloVol['sampler' + (_i + 1)] = this.state['s' + (_i + 1) + 'Volume'];
 	            if (this.state['s' + (_i + 1) + 'Volume'] > -50) {
-	              this.muteSampler('sampler' + (_i + 1));
+	              this.muteSampler('sampler' + (_i + 1), e);
 	            }
 	          }
 	        }
@@ -21794,6 +21794,8 @@
 	  }, {
 	    key: 'muteSampler',
 	    value: function muteSampler(sampler, e) {
+	      e.currentTarget.focus();
+	      e.currentTarget.blur();
 	      if (this.state['s' + sampler[7] + 'Volume'] > -50) {
 	        this.preMuteVol[sampler] = this.state['s' + sampler[7] + 'Volume'];
 	        this.setState(_defineProperty({}, 's' + sampler[7] + 'Volume', -50));
