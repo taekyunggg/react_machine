@@ -34,7 +34,6 @@ class Footer extends React.Component {
           style={instructionStyle} >
           <Instructions />
         </Modal>
-
       </footer>
     );
   }

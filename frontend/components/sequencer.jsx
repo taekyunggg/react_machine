@@ -145,7 +145,8 @@ class Sequencer extends React.Component {
     return volButtons;
   }
 
-  soloSampler(sampler) {
+  soloSampler(sampler, e) {
+    e.currentTarget.blur();
     if (this.state[`${sampler}Solo`]) {
       for (let i = 0; i < 8; i++) {
         if (sampler === SamplerList[i]) {
@@ -181,7 +182,7 @@ class Sequencer extends React.Component {
     }
   }
 
-  muteSampler(sampler) {
+  muteSampler(sampler, e) {
     if (this.state[`s${sampler[7]}Volume`] > -50) {
       this.preMuteVol[sampler] = this.state[`s${sampler[7]}Volume`];
       this.setState({

@@ -415,6 +415,7 @@ html, body {
 	padding: 2px;
 	border-radius: 3px;
 	color: rgb(217, 217, 217);
+	outline: none;
 }
 
 .solo:hover, .mute:hover {
