@@ -3,9 +3,10 @@ import Tone from 'tone';
 import classNames from 'classnames';
 import { TRANSPORT_POS } from '../util/transport_positions';
 import * as samplePacks from '../util/sample_packs';
-import injectTapEventPlugin from 'react-tap-event-plugin';
-import Slider from 'material-ui/Slider';
 import { demoTrack, nullTrack } from '../util/patterns';
+import SamplerList from '../util/sampler_list';
+import Slider from 'material-ui/Slider';
+import injectTapEventPlugin from 'react-tap-event-plugin';
 import Knob from 'react-canvas-knob';
 
 class Sequencer extends React.Component {
@@ -20,8 +21,11 @@ class Sequencer extends React.Component {
     this.clearPattern = this.clearPattern.bind(this);
     this.changeSVolume = this.changeSVolume.bind(this);
     this.soloMuteButtons = this.soloMuteButtons.bind(this);
+    this.soloSampler = this.soloSampler.bind(this);
+    this.muteSampler = this.muteSampler.bind(this);
     this.samplePacks = samplePacks;
     this.preMuteVol = {};
+    this.preSoloVol = {};
 
     this.state = {
       bpm: 106,
@@ -35,6 +39,8 @@ class Sequencer extends React.Component {
       this[`channel${i}`] = demoTrack[i - 1];
       this[`sampler${i}`] = new Tone.Sampler(samplePacks.eightZeroEight[i - 1]).toMaster();
       this.state[`s${i}Volume`] = -5;
+      this.state[`sampler${i}Solo`] = false;
+      this.state[`sampler${i}Disable`] = false;
       this[`sampler${i}`].volume.value = this.state[`s${i}Volume`];
       this[`channelSequence${i}`] = new Tone.Sequence(
         this.triggerSample.bind(this, `sampler${i}`),
@@ -125,10 +131,14 @@ class Sequencer extends React.Component {
         "mute": true,
         "mute-active": this.state[`s${i}Volume`] < -49
       });
+      const soloClass = classNames({
+        "solo": true,
+        "solo-active": this.state[`sampler${i}Solo`]
+      });
       volButtons.push(
         <div className="solo-mute" key={i}>
-          <div className="solo" onClick={this.soloSampler.bind(this, `sampler${i}`)}>S</div>
-          <div className={muteClass} onClick={this.muteSampler.bind(this, `sampler${i}`)}>M</div>
+          <button className={soloClass} onClick={this.soloSampler.bind(this, `sampler${i}`)} disabled={this.state[`sampler${i}Disable`]}>S</button>
+          <button className={muteClass} onClick={this.muteSampler.bind(this, `sampler${i}`)}>M</button>
         </div>
       );
     }
@@ -136,7 +146,39 @@ class Sequencer extends React.Component {
   }
 
   soloSampler(sampler) {
-
+    if (this.state[`${sampler}Solo`]) {
+      for (let i = 0; i < 8; i++) {
+        if (sampler === SamplerList[i]) {
+          this.setState({
+            [`${sampler}Solo`]: false
+          });
+        } else {
+          const preVolume = this.preSoloVol[`sampler${i + 1}`];
+          this.setState({
+            [`s${i + 1}Volume`]: preVolume,
+            [`sampler${i + 1}Disable`]: false
+          });
+          this[`sampler${i + 1}`].volume.value = preVolume;
+        }
+      }
+    } else {
+      for (let i = 0; i < 8; i++) {
+        if (sampler === SamplerList[i]) {
+          this.setState({
+            [`${sampler}Solo`]: true
+          });
+        } else {
+          this.setState({
+            [`sampler${i + 1}Solo`]: false,
+            [`sampler${i + 1}Disable`]: true
+          });
+          this.preSoloVol[`sampler${i + 1}`] = this.state[`s${i + 1}Volume`];
+          if (this.state[`s${i + 1}Volume`] > -50) {
+            this.muteSampler(`sampler${i + 1}`);
+          }
+        }
+      }
+    }
   }
 
   muteSampler(sampler) {

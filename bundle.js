@@ -21573,15 +21573,19 @@
 	
 	var samplePacks = _interopRequireWildcard(_sample_packs);
 	
-	var _reactTapEventPlugin = __webpack_require__(179);
+	var _patterns = __webpack_require__(293);
 	
-	var _reactTapEventPlugin2 = _interopRequireDefault(_reactTapEventPlugin);
+	var _sampler_list = __webpack_require__(380);
+	
+	var _sampler_list2 = _interopRequireDefault(_sampler_list);
 	
 	var _Slider = __webpack_require__(185);
 	
 	var _Slider2 = _interopRequireDefault(_Slider);
 	
-	var _patterns = __webpack_require__(293);
+	var _reactTapEventPlugin = __webpack_require__(179);
+	
+	var _reactTapEventPlugin2 = _interopRequireDefault(_reactTapEventPlugin);
 	
 	var _reactCanvasKnob = __webpack_require__(294);
 	
@@ -21616,8 +21620,11 @@
 	    _this.clearPattern = _this.clearPattern.bind(_this);
 	    _this.changeSVolume = _this.changeSVolume.bind(_this);
 	    _this.soloMuteButtons = _this.soloMuteButtons.bind(_this);
+	    _this.soloSampler = _this.soloSampler.bind(_this);
+	    _this.muteSampler = _this.muteSampler.bind(_this);
 	    _this.samplePacks = samplePacks;
 	    _this.preMuteVol = {};
+	    _this.preSoloVol = {};
 	
 	    _this.state = {
 	      bpm: 106,
@@ -21631,6 +21638,8 @@
 	      _this['channel' + i] = _patterns.demoTrack[i - 1];
 	      _this['sampler' + i] = new _tone2.default.Sampler(samplePacks.eightZeroEight[i - 1]).toMaster();
 	      _this.state['s' + i + 'Volume'] = -5;
+	      _this.state['sampler' + i + 'Solo'] = false;
+	      _this.state['sampler' + i + 'Disable'] = false;
 	      _this['sampler' + i].volume.value = _this.state['s' + i + 'Volume'];
 	      _this['channelSequence' + i] = new _tone2.default.Sequence(_this.triggerSample.bind(_this, 'sampler' + i), _this['channel' + i], "16n").start(0);
 	    }
@@ -21729,16 +21738,20 @@
 	          "mute": true,
 	          "mute-active": this.state['s' + i + 'Volume'] < -49
 	        });
+	        var soloClass = (0, _classnames2.default)({
+	          "solo": true,
+	          "solo-active": this.state['sampler' + i + 'Solo']
+	        });
 	        volButtons.push(_react2.default.createElement(
 	          'div',
 	          { className: 'solo-mute', key: i },
 	          _react2.default.createElement(
-	            'div',
-	            { className: 'solo', onClick: this.soloSampler.bind(this, 'sampler' + i) },
+	            'button',
+	            { className: soloClass, onClick: this.soloSampler.bind(this, 'sampler' + i), disabled: this.state['sampler' + i + 'Disable'] },
 	            'S'
 	          ),
 	          _react2.default.createElement(
-	            'div',
+	            'button',
 	            { className: muteClass, onClick: this.muteSampler.bind(this, 'sampler' + i) },
 	            'M'
 	          )
@@ -21748,7 +21761,35 @@
 	    }
 	  }, {
 	    key: 'soloSampler',
-	    value: function soloSampler(sampler) {}
+	    value: function soloSampler(sampler) {
+	      if (this.state[sampler + 'Solo']) {
+	        for (var i = 0; i < 8; i++) {
+	          if (sampler === _sampler_list2.default[i]) {
+	            this.setState(_defineProperty({}, sampler + 'Solo', false));
+	          } else {
+	            var _setState2;
+	
+	            var preVolume = this.preSoloVol['sampler' + (i + 1)];
+	            this.setState((_setState2 = {}, _defineProperty(_setState2, 's' + (i + 1) + 'Volume', preVolume), _defineProperty(_setState2, 'sampler' + (i + 1) + 'Disable', false), _setState2));
+	            this['sampler' + (i + 1)].volume.value = preVolume;
+	          }
+	        }
+	      } else {
+	        for (var _i = 0; _i < 8; _i++) {
+	          if (sampler === _sampler_list2.default[_i]) {
+	            this.setState(_defineProperty({}, sampler + 'Solo', true));
+	          } else {
+	            var _setState4;
+	
+	            this.setState((_setState4 = {}, _defineProperty(_setState4, 'sampler' + (_i + 1) + 'Solo', false), _defineProperty(_setState4, 'sampler' + (_i + 1) + 'Disable', true), _setState4));
+	            this.preSoloVol['sampler' + (_i + 1)] = this.state['s' + (_i + 1) + 'Volume'];
+	            if (this.state['s' + (_i + 1) + 'Volume'] > -50) {
+	              this.muteSampler('sampler' + (_i + 1));
+	            }
+	          }
+	        }
+	      }
+	    }
 	  }, {
 	    key: 'muteSampler',
 	    value: function muteSampler(sampler) {
@@ -56761,6 +56802,19 @@
 	};
 	
 	exports.default = new Typography();
+
+/***/ },
+/* 380 */
+/***/ function(module, exports) {
+
+	"use strict";
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	var SamplerList = ["sampler1", "sampler2", "sampler3", "sampler4", "sampler5", "sampler6", "sampler7", "sampler8"];
+	
+	exports.default = SamplerList;
 
 /***/ }
 /******/ ]);

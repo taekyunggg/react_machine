@@ -10,7 +10,7 @@ table, caption, tbody, tfoot, thead, tr, th, td,
 article, aside, canvas, details, embed,
 figure, figcaption, footer, header, hgroup,
 menu, nav, output, ruby, section, summary,
-time, mark, audio, video {
+time, mark, audio, video, button {
 	margin: 0;
 	padding: 0;
 	border: 0;
@@ -414,6 +414,7 @@ html, body {
 	background: rgb(64, 62, 65);
 	padding: 2px;
 	border-radius: 3px;
+	color: rgb(217, 217, 217);
 }
 
 .solo:hover, .mute:hover {
@@ -434,6 +435,6 @@ html, body {
 	border: 1px solid rgb(74, 73, 73);
 }
 
-.mute-active {
-	color: rgb(203, 115, 33);
+.mute-active, .solo-active {
+	color: rgb(50, 140, 249);
 }
