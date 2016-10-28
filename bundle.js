@@ -48438,9 +48438,9 @@
 	        mousePos.y = 1;
 	      }
 	      if (this.fx1 === this.lpFilter) {
-	        this.fx1[_fxParams2.default['lpFilter']].value = Math.pow(10, mousePos.y / 46.057) + 500;
+	        this.fx1[_fxParams2.default['lpFilter']].value = Math.pow(10, mousePos.y / 46.057239172) + 500;
 	      } else if (this.fx1 === this.hpFilter) {
-	        this.fx1[_fxParams2.default['hpFilter']].value = Math.pow(10, mousePos.y / 46.057);
+	        this.fx1[_fxParams2.default['hpFilter']].value = Math.pow(10, mousePos.y / 46.057239172);
 	      }
 	      if (this.fx2 === this.reverb) {
 	        this.fx2[_fxParams2.default['reverb']].value = mousePos.x * 0.0003;
