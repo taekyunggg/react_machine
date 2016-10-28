@@ -21615,7 +21615,9 @@
 	    _this.changeVolume = _this.changeVolume.bind(_this);
 	    _this.clearPattern = _this.clearPattern.bind(_this);
 	    _this.changeSVolume = _this.changeSVolume.bind(_this);
+	    _this.soloMuteButtons = _this.soloMuteButtons.bind(_this);
 	    _this.samplePacks = samplePacks;
+	    _this.preMuteVol = {};
 	
 	    _this.state = {
 	      bpm: 106,
@@ -21642,6 +21644,23 @@
 	  }
 	
 	  _createClass(Sequencer, [{
+	    key: 'componentWillMount',
+	    value: function componentWillMount() {
+	      (0, _reactTapEventPlugin2.default)();
+	    }
+	  }, {
+	    key: 'componentDidMount',
+	    value: function componentDidMount() {
+	      var _this2 = this;
+	
+	      document.addEventListener('keydown', function (e) {
+	        var keyName = e.key;
+	        if (keyName === " ") {
+	          _this2.startStop();
+	        }
+	      });
+	    }
+	  }, {
 	    key: 'triggerSample',
 	    value: function triggerSample(sampler) {
 	      this[sampler].triggerAttackRelease(0);
@@ -21665,7 +21684,7 @@
 	  }, {
 	    key: 'channelButtons',
 	    value: function channelButtons(channel) {
-	      var _this2 = this;
+	      var _this3 = this;
 	
 	      var buttonIdx = [];
 	      for (var i = 0; i < 16; i++) {
@@ -21673,21 +21692,23 @@
 	      }
 	      var buttons = buttonIdx.map(function (idx) {
 	        var stepClass = void 0;
-	        if (_this2[channel][idx]) {
+	        if (_this3[channel][idx]) {
 	          stepClass = (0, _classnames2.default)({
 	            "step-button": true,
 	            "step-on": true,
 	            "step-off": false,
-	            "step-on-active": idx === _this2.state.position,
-	            "downbeat": idx % 4 === 0
+	            "step-on-active": idx === _this3.state.position,
+	            "downbeat": idx % 4 === 0,
+	            "muted-on": _this3.state['s' + channel[7] + 'Volume'] < -49
 	          });
 	        } else {
 	          stepClass = (0, _classnames2.default)({
 	            "step-button": true,
 	            "step-on": false,
 	            "step-off": true,
-	            "step-off-active": idx === _this2.state.position,
-	            "downbeat": idx % 4 === 0
+	            "step-off-active": idx === _this3.state.position,
+	            "downbeat": idx % 4 === 0,
+	            "muted-off": _this3.state['s' + channel[7] + 'Volume'] < -49
 	          });
 	        }
 	        return _react2.default.createElement('div', {
@@ -21695,7 +21716,7 @@
 	          'data-idx': idx,
 	          key: idx,
 	          className: stepClass,
-	          onClick: _this2.updateSequence });
+	          onClick: _this3.updateSequence });
 	      });
 	      return buttons;
 	    }
@@ -21704,12 +21725,41 @@
 	    value: function soloMuteButtons() {
 	      var volButtons = [];
 	      for (var i = 1; i < 9; i++) {
+	        var muteClass = (0, _classnames2.default)({
+	          "mute": true,
+	          "mute-active": this.state['s' + i + 'Volume'] < -49
+	        });
 	        volButtons.push(_react2.default.createElement(
 	          'div',
-	          { className: 'solo-mute' },
-	          _react2.default.createElement('div', { className: 'solo', onClick: this.solo.bind(this, 'channel' + i) }),
-	          _react2.default.createElement('div', { className: 'mute', onClick: this.solo.bind(this, 'channel' + i) })
+	          { className: 'solo-mute', key: i },
+	          _react2.default.createElement(
+	            'div',
+	            { className: 'solo', onClick: this.soloSampler.bind(this, 'sampler' + i) },
+	            'S'
+	          ),
+	          _react2.default.createElement(
+	            'div',
+	            { className: muteClass, onClick: this.muteSampler.bind(this, 'sampler' + i) },
+	            'M'
+	          )
 	        ));
+	      }
+	      return volButtons;
+	    }
+	  }, {
+	    key: 'soloSampler',
+	    value: function soloSampler(sampler) {}
+	  }, {
+	    key: 'muteSampler',
+	    value: function muteSampler(sampler) {
+	      if (this.state['s' + sampler[7] + 'Volume'] > -50) {
+	        this.preMuteVol[sampler] = this.state['s' + sampler[7] + 'Volume'];
+	        this.setState(_defineProperty({}, 's' + sampler[7] + 'Volume', -50));
+	        this[sampler].volume.value = -10000;
+	      } else {
+	        var preVolume = this.preMuteVol[sampler];
+	        this.setState(_defineProperty({}, 's' + sampler[7] + 'Volume', preVolume));
+	        this[sampler].volume.value = preVolume;
 	      }
 	    }
 	  }, {
@@ -21751,23 +21801,6 @@
 	      }
 	      _tone2.default.Transport.bpm.value = newTempo;
 	      this.setState({ bpm: newTempo });
-	    }
-	  }, {
-	    key: 'componentWillMount',
-	    value: function componentWillMount() {
-	      (0, _reactTapEventPlugin2.default)();
-	    }
-	  }, {
-	    key: 'componentDidMount',
-	    value: function componentDidMount() {
-	      var _this3 = this;
-	
-	      document.addEventListener('keydown', function (e) {
-	        var keyName = e.key;
-	        if (keyName === " ") {
-	          _this3.startStop();
-	        }
-	      });
 	    }
 	  }, {
 	    key: 'changeVolume',
@@ -21874,6 +21907,11 @@
 	            'div',
 	            { className: 'volume-knobs' },
 	            volumeKnobs
+	          ),
+	          _react2.default.createElement(
+	            'div',
+	            { className: 'solo-mute-buttons' },
+	            this.soloMuteButtons()
 	          ),
 	          _react2.default.createElement(
 	            'div',
@@ -48413,7 +48451,6 @@
 	    _this.canvasTrail = _this.canvasTrail.bind(_this);
 	    _this.removeListeners = _this.removeListeners.bind(_this);
 	    _this.animationLoop = _this.animationLoop.bind(_this);
-	    _this.isActiveFx = _this.isActiveFx.bind(_this);
 	    _this.changeFx = _this.changeFx.bind(_this);
 	    return _this;
 	  }
@@ -48476,7 +48513,7 @@
 	      this.ctx = this.canvas.getContext("2d");
 	      this.circle = new _circle2.default(this.ctx);
 	      this.circles = [];
-	      for (var i = 0; i < 5; i++) {
+	      for (var i = 0; i < 10; i++) {
 	        this.circles.push(new _circle2.default(this.ctx));
 	      }
 	      this.canvas.addEventListener('mousedown', function (e) {
@@ -48519,12 +48556,9 @@
 	            c2 = this.circles[i - 1];
 	
 	        this.circles[this.circles.length - 1].draw();
-	
-	        if (xPos && yPos) {
-	          this.circles[this.circles.length - 1].x = xPos;
-	          this.circles[this.circles.length - 1].y = yPos;
-	          c1.draw();
-	        }
+	        this.circles[this.circles.length - 1].x = xPos;
+	        this.circles[this.circles.length - 1].y = yPos;
+	        c1.draw();
 	
 	        if (i > 0) {
 	          c2.x += (c1.x - c2.x) * 0.6;
@@ -48537,11 +48571,6 @@
 	    value: function animationLoop(xPos, yPos) {
 	      this.canvasTrail(this.state.mouseX, this.state.mouseY);
 	      this.animationId = window.requestAnimationFrame(this.animationLoop.bind(this, this.state.mouseX, this.state.mouseY));
-	    }
-	  }, {
-	    key: 'isActiveFx',
-	    value: function isActiveFx(fx, fxNum) {
-	      return this.state[fxNum] === this[fx];
 	    }
 	  }, {
 	    key: 'changeFx',

@@ -29,7 +29,6 @@ class Effects extends React.Component {
     this.canvasTrail = this.canvasTrail.bind(this);
     this.removeListeners = this.removeListeners.bind(this);
     this.animationLoop = this.animationLoop.bind(this);
-    this.isActiveFx = this.isActiveFx.bind(this);
     this.changeFx = this.changeFx.bind(this);
   }
 
@@ -83,7 +82,7 @@ class Effects extends React.Component {
     this.ctx = this.canvas.getContext("2d");
     this.circle = new Circle(this.ctx);
     this.circles = [];
-    for (let i = 0; i < 5; i++) {
+    for (let i = 0; i < 10; i++) {
       this.circles.push(new Circle(this.ctx));
     }
     this.canvas.addEventListener('mousedown', (e) => {
@@ -124,17 +123,14 @@ class Effects extends React.Component {
     this.initializeCanvas();
     for(let i = 0; i < this.circles.length; i++) {
   		let c1 = this.circles[i],
-  			c2 = this.circles[i-1];
+  			  c2 = this.circles[i-1];
 
   		this.circles[this.circles.length - 1].draw();
+			this.circles[this.circles.length - 1].x = xPos;
+			this.circles[this.circles.length - 1].y = yPos;
+ 			c1.draw();
 
-  		if(xPos && yPos) {
-  			this.circles[this.circles.length - 1].x = xPos;
-  			this.circles[this.circles.length - 1].y = yPos;
-   			c1.draw();
-  		}
-
-  		if(i > 0) {
+  		if (i > 0) {
   			c2.x += (c1.x - c2.x) * 0.6;
   			c2.y += (c1.y - c2.y) * 0.6;
   		}
@@ -146,10 +142,6 @@ class Effects extends React.Component {
     this.animationId = window.requestAnimationFrame(
       this.animationLoop.bind(this, this.state.mouseX, this.state.mouseY)
     );
-  }
-
-  isActiveFx(fx, fxNum) {
-    return this.state[fxNum] === this[fx];
   }
 
   changeFx(fxNum, e) {

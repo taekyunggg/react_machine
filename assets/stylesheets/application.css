@@ -392,3 +392,48 @@ html, body {
 #fa-tab {
 	border-right: 1px solid rgb(50, 140, 249);
 }
+
+.solo-mute-buttons {
+	display: flex;
+	flex-direction: column;
+}
+
+.solo-mute {
+	margin-bottom: 10px;
+  margin-right: 10px;
+  font-size: 12px;
+  height: 32px;
+	display: flex;
+	color: rgb(217, 217, 217);
+	flex-direction: column;
+	justify-content: center;
+}
+
+.solo, .mute {
+	text-align: center;
+	background: rgb(64, 62, 65);
+	padding: 2px;
+	border-radius: 3px;
+}
+
+.solo:hover, .mute:hover {
+	cursor: pointer;
+	color: rgb(203, 115, 33);
+}
+
+.solo {
+	margin-bottom: 2px;
+}
+
+.muted-on {
+	background: rgb(74, 73, 73);
+	border: 1px solid rgb(74, 73, 73);
+}
+
+.muted-off {
+	border: 1px solid rgb(74, 73, 73);
+}
+
+.mute-active {
+	color: rgb(203, 115, 33);
+}
