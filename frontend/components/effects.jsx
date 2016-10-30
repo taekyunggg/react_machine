@@ -2,6 +2,7 @@ import React from 'react';
 import Tone from 'tone';
 import Circle from '../util/circle';
 import FxParams from '../util/fxParams';
+import SnakeView from './snake_view';
 
 class Effects extends React.Component {
   constructor(props) {
@@ -98,6 +99,7 @@ class Effects extends React.Component {
     }, false);
     document.getElementById('root').addEventListener('mouseup',
     this.removeListeners, false);
+    this.snake = new SnakeView();
   }
 
   removeListeners() {
@@ -154,10 +156,27 @@ class Effects extends React.Component {
     Tone.Master.chain(this.fx1, this.fx2);
   }
 
+  snakeBoard() {
+    let board = [];
+    for (let i = 0; i < 20; i++) {
+      let row = [];
+      for (let j = 0; j < 20; j++) {
+        row.push(<li className='snake-li' key={j}></li>);
+      }
+      board.push(
+        <ul className="snake-ul" key={i}>
+          {row}
+        </ul>
+      );
+    }
+    return board;
+  }
+
   render() {
     return (
       <div className="fx-container" id="fx-highlighter">
         <div className="fx-div">
+          <figure className="snake-container">{this.snakeBoard()}</figure>
           <p className="fx-name name1">{this.state.fx1Active}</p>
           <p className="fx-name name2">{this.state.fx2Active}</p>
           <canvas id="fx-canvas" width="200" height="200"></canvas>

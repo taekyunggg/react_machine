@@ -439,3 +439,25 @@ html, body {
 .mute-active, .solo-active {
 	color: rgb(221, 246, 21);
 }
+
+.snake-container {
+	height: 200px;
+	width: 200px;
+}
+
+.apple {
+	background: red;
+}
+
+.snake {
+	background: green;
+}
+
+.snake-ul {
+	display: flex;
+}
+
+.snake-container li {
+	width: 10px;
+	height: 10px;
+}
