@@ -2,7 +2,8 @@ import React from 'react';
 import Tone from 'tone';
 import Circle from '../util/circle';
 import FxParams from '../util/fxParams';
-import SnakeView from './snake_view';
+import SnakeView from '../util/snake/snake_view';
+import classNames from 'classnames';
 
 class Effects extends React.Component {
   constructor(props) {
@@ -20,7 +21,8 @@ class Effects extends React.Component {
       fx1Active: 'lpFilter',
       fx2Active: 'reverb',
       mouseX: 0,
-      mouseY: 0
+      mouseY: 0,
+      snakeOn: false
     };
     Tone.Master.chain(this.fx1, this.fx2);
 
@@ -31,6 +33,8 @@ class Effects extends React.Component {
     this.removeListeners = this.removeListeners.bind(this);
     this.animationLoop = this.animationLoop.bind(this);
     this.changeFx = this.changeFx.bind(this);
+    this.toggleSnake = this.toggleSnake.bind(this);
+    this.resetFx = this.resetFx.bind(this);
   }
 
   getMousePos(e) {
@@ -40,8 +44,6 @@ class Effects extends React.Component {
       y: e.clientY - rect.top
     };
   }
-
-  // Seems to be a math question. If you are willing to settle for 1 Hz as the lowest frequency (infra sound), use freq = exp10 (i / (200.0 / log10 (22000.0)) which is approximately freq = exp10 (i / 46.057). If the starting point must be 0 Hz, you could tweak to freq = exp10(i/46.057)-1.0
 
   mouseMoveEvent(e) {
     let mousePos = this.getMousePos(e);
@@ -99,19 +101,22 @@ class Effects extends React.Component {
     }, false);
     document.getElementById('root').addEventListener('mouseup',
     this.removeListeners, false);
-    this.snake = new SnakeView();
   }
 
   removeListeners() {
-    this.lpFilter.frequency.value = 22000;
-    this.hpFilter.frequency.value = 1;
-    this.phaser.wet.value = 0;
-    this.reverb.wet.value = 0;
+    this.resetFx();
     this.canvas.classList.remove("canvas-active");
     this.fxHighlight.classList.remove("highlight-active");
     this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
     this.canvas.removeEventListener('mousemove', this.mouseMoveEvent);
     window.cancelAnimationFrame(this.animationId);
+  }
+
+  resetFx() {
+    this.lpFilter.frequency.value = 22000;
+    this.hpFilter.frequency.value = 1;
+    this.phaser.wet.value = 0;
+    this.reverb.wet.value = 0;
   }
 
   initializeCanvas() {
@@ -172,14 +177,43 @@ class Effects extends React.Component {
     return board;
   }
 
+  toggleSnake() {
+    if (this.state.snakeOn) {
+      window.clearInterval(this.snakeView.intervalId);
+      window.clearInterval(this.snakeFxId);
+      this.setState({ snakeOn: false });
+    } else {
+      this.setState({ snakeOn: true });
+      this.snakeView = new SnakeView(this);
+    }
+  }
+
   render() {
+    const fxClasses = classNames({
+      "fx-pad": true,
+      "hidden": this.state.snakeOn
+    });
+
+    const snakeClasses = classNames({
+      "snake-container": true,
+      "hidden": !this.state.snakeOn
+    });
+
+    const snakeButtonClasses = classNames({
+      "snake-switch": true,
+      "snake-switch-on": this.state.snakeOn
+    });
+
     return (
       <div className="fx-container" id="fx-highlighter">
         <div className="fx-div">
-          <figure className="snake-container">{this.snakeBoard()}</figure>
           <p className="fx-name name1">{this.state.fx1Active}</p>
           <p className="fx-name name2">{this.state.fx2Active}</p>
-          <canvas id="fx-canvas" width="200" height="200"></canvas>
+          <div className={snakeButtonClasses} onClick={this.toggleSnake}>snake?</div>
+          <figure className={snakeClasses}>{this.snakeBoard()}</figure>
+          <div className={fxClasses}>
+            <canvas id="fx-canvas" width="200" height="200"></canvas>
+          </div>
         </div>
         <div className="fx-selectors">
           <select

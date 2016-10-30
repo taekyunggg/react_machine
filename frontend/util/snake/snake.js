@@ -56,7 +56,6 @@ class Snake {
   move() {
     this.segments.push(this.head().plus(Snake.DIFFS[this.dir]));
     this.turning = false;
-
     if (this.eatApple()) {
       this.board.apple.replace();
     }

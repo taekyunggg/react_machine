@@ -48467,9 +48467,13 @@
 	
 	var _fxParams2 = _interopRequireDefault(_fxParams);
 	
-	var _snake_view = __webpack_require__(299);
+	var _snake_view = __webpack_require__(386);
 	
 	var _snake_view2 = _interopRequireDefault(_snake_view);
+	
+	var _classnames = __webpack_require__(176);
+	
+	var _classnames2 = _interopRequireDefault(_classnames);
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
@@ -48502,7 +48506,8 @@
 	      fx1Active: 'lpFilter',
 	      fx2Active: 'reverb',
 	      mouseX: 0,
-	      mouseY: 0
+	      mouseY: 0,
+	      snakeOn: false
 	    };
 	    _tone2.default.Master.chain(_this.fx1, _this.fx2);
 	
@@ -48513,6 +48518,8 @@
 	    _this.removeListeners = _this.removeListeners.bind(_this);
 	    _this.animationLoop = _this.animationLoop.bind(_this);
 	    _this.changeFx = _this.changeFx.bind(_this);
+	    _this.toggleSnake = _this.toggleSnake.bind(_this);
+	    _this.resetFx = _this.resetFx.bind(_this);
 	    return _this;
 	  }
 	
@@ -48525,9 +48532,6 @@
 	        y: e.clientY - rect.top
 	      };
 	    }
-	
-	    // Seems to be a math question. If you are willing to settle for 1 Hz as the lowest frequency (infra sound), use freq = exp10 (i / (200.0 / log10 (22000.0)) which is approximately freq = exp10 (i / 46.057). If the starting point must be 0 Hz, you could tweak to freq = exp10(i/46.057)-1.0
-	
 	  }, {
 	    key: 'mouseMoveEvent',
 	    value: function mouseMoveEvent(e) {
@@ -48586,20 +48590,24 @@
 	        _this2.canvas.addEventListener('mousemove', _this2.mouseMoveEvent, false);
 	      }, false);
 	      document.getElementById('root').addEventListener('mouseup', this.removeListeners, false);
-	      this.snake = new _snake_view2.default();
 	    }
 	  }, {
 	    key: 'removeListeners',
 	    value: function removeListeners() {
-	      this.lpFilter.frequency.value = 22000;
-	      this.hpFilter.frequency.value = 1;
-	      this.phaser.wet.value = 0;
-	      this.reverb.wet.value = 0;
+	      this.resetFx();
 	      this.canvas.classList.remove("canvas-active");
 	      this.fxHighlight.classList.remove("highlight-active");
 	      this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
 	      this.canvas.removeEventListener('mousemove', this.mouseMoveEvent);
 	      window.cancelAnimationFrame(this.animationId);
+	    }
+	  }, {
+	    key: 'resetFx',
+	    value: function resetFx() {
+	      this.lpFilter.frequency.value = 22000;
+	      this.hpFilter.frequency.value = 1;
+	      this.phaser.wet.value = 0;
+	      this.reverb.wet.value = 0;
 	    }
 	  }, {
 	    key: 'initializeCanvas',
@@ -48661,19 +48669,41 @@
 	      return board;
 	    }
 	  }, {
+	    key: 'toggleSnake',
+	    value: function toggleSnake() {
+	      if (this.state.snakeOn) {
+	        window.clearInterval(this.snakeView.intervalId);
+	        window.clearInterval(this.snakeFxId);
+	        this.setState({ snakeOn: false });
+	      } else {
+	        this.setState({ snakeOn: true });
+	        this.snakeView = new _snake_view2.default(this);
+	      }
+	    }
+	  }, {
 	    key: 'render',
 	    value: function render() {
+	      var fxClasses = (0, _classnames2.default)({
+	        "fx-pad": true,
+	        "hidden": this.state.snakeOn
+	      });
+	
+	      var snakeClasses = (0, _classnames2.default)({
+	        "snake-container": true,
+	        "hidden": !this.state.snakeOn
+	      });
+	
+	      var snakeButtonClasses = (0, _classnames2.default)({
+	        "snake-switch": true,
+	        "snake-switch-on": this.state.snakeOn
+	      });
+	
 	      return _react2.default.createElement(
 	        'div',
 	        { className: 'fx-container', id: 'fx-highlighter' },
 	        _react2.default.createElement(
 	          'div',
 	          { className: 'fx-div' },
-	          _react2.default.createElement(
-	            'figure',
-	            { className: 'snake-container' },
-	            this.snakeBoard()
-	          ),
 	          _react2.default.createElement(
 	            'p',
 	            { className: 'fx-name name1' },
@@ -48684,7 +48714,21 @@
 	            { className: 'fx-name name2' },
 	            this.state.fx2Active
 	          ),
-	          _react2.default.createElement('canvas', { id: 'fx-canvas', width: '200', height: '200' })
+	          _react2.default.createElement(
+	            'div',
+	            { className: snakeButtonClasses, onClick: this.toggleSnake },
+	            'snake?'
+	          ),
+	          _react2.default.createElement(
+	            'figure',
+	            { className: snakeClasses },
+	            this.snakeBoard()
+	          ),
+	          _react2.default.createElement(
+	            'div',
+	            { className: fxClasses },
+	            _react2.default.createElement('canvas', { id: 'fx-canvas', width: '200', height: '200' })
+	          )
 	        ),
 	        _react2.default.createElement(
 	          'div',
@@ -48794,93 +48838,7 @@
 	exports.default = FxParams;
 
 /***/ },
-/* 299 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-	
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-	
-	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-	
-	var _board = __webpack_require__(300);
-	
-	var _board2 = _interopRequireDefault(_board);
-	
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-	
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-	
-	var SnakeView = function () {
-	  function SnakeView() {
-	    _classCallCheck(this, SnakeView);
-	
-	    this.$el = $('.snake-container');
-	    this.board = new _board2.default(20);
-	    this.keys = {
-	      38: "N",
-	      39: "E",
-	      40: "S",
-	      37: "W"
-	    };
-	    this.setupGrid();
-	
-	    this.intervalId = window.setInterval(this.step.bind(this), 100);
-	
-	    $(window).on("keydown", this.handleKeyEvent.bind(this));
-	  }
-	
-	  _createClass(SnakeView, [{
-	    key: 'handleKeyEvent',
-	    value: function handleKeyEvent(e) {
-	      if (this.keys[e.keyCode]) {
-	        this.board.snake.turn(this.keys[e.keyCode]);
-	      }
-	    }
-	  }, {
-	    key: 'updateClasses',
-	    value: function updateClasses(coords, className) {
-	      var _this = this;
-	
-	      this.$li.filter('.' + className).removeClass();
-	
-	      coords.forEach(function (coord) {
-	        var flatCoord = coord.i * _this.board.dim + coord.j;
-	        _this.$li.eq(flatCoord).addClass(className);
-	      });
-	    }
-	  }, {
-	    key: 'setupGrid',
-	    value: function setupGrid() {
-	      this.$li = this.$el.find("li");
-	    }
-	  }, {
-	    key: 'step',
-	    value: function step() {
-	      if (this.board.snake.segments.length > 0) {
-	        this.board.snake.move();
-	        this.render();
-	      } else {
-	        alert("You lose!");
-	        window.clearInterval(this.intervalId);
-	      }
-	    }
-	  }, {
-	    key: 'render',
-	    value: function render() {
-	      this.updateClasses(this.board.snake.segments, "snake");
-	      this.updateClasses([this.board.apple.position], "apple");
-	    }
-	  }]);
-	
-	  return SnakeView;
-	}();
-	
-	exports.default = SnakeView;
-
-/***/ },
+/* 299 */,
 /* 300 */
 /***/ function(module, exports, __webpack_require__) {
 
@@ -49042,7 +49000,6 @@
 	    value: function move() {
 	      this.segments.push(this.head().plus(Snake.DIFFS[this.dir]));
 	      this.turning = false;
-	
 	      if (this.eatApple()) {
 	        this.board.apple.replace();
 	      }
@@ -57229,6 +57186,118 @@
 	};
 	
 	exports.default = new Typography();
+
+/***/ },
+/* 386 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+	
+	var _board = __webpack_require__(300);
+	
+	var _board2 = _interopRequireDefault(_board);
+	
+	var _fxParams = __webpack_require__(298);
+	
+	var _fxParams2 = _interopRequireDefault(_fxParams);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+	
+	var SnakeView = function () {
+	  function SnakeView(fxContext) {
+	    _classCallCheck(this, SnakeView);
+	
+	    this.$el = $('.snake-container');
+	    this.board = new _board2.default(20);
+	    this.keys = {
+	      38: "N",
+	      39: "E",
+	      40: "S",
+	      37: "W"
+	    };
+	    this.setupGrid();
+	
+	    this.intervalId = window.setInterval(this.step.bind(this), 100);
+	    this.fxContext = fxContext;
+	    this.x = 0;
+	    this.y = 0;
+	
+	    $(window).on("keydown", this.handleKeyEvent.bind(this));
+	  }
+	
+	  _createClass(SnakeView, [{
+	    key: 'handleKeyEvent',
+	    value: function handleKeyEvent(e) {
+	      if (this.keys[e.keyCode]) {
+	        this.board.snake.turn(this.keys[e.keyCode]);
+	      }
+	    }
+	  }, {
+	    key: 'updateClasses',
+	    value: function updateClasses(coords, className) {
+	      var _this = this;
+	
+	      this.$li.filter('.' + className).removeClass();
+	
+	      coords.forEach(function (coord) {
+	        var flatCoord = coord.i * _this.board.dim + coord.j;
+	        _this.$li.eq(flatCoord).addClass(className);
+	      });
+	    }
+	  }, {
+	    key: 'setupGrid',
+	    value: function setupGrid() {
+	      this.$li = this.$el.find("li");
+	    }
+	  }, {
+	    key: 'step',
+	    value: function step() {
+	      if (this.board.snake.segments.length > 0) {
+	        this.board.snake.move();
+	        this.render();
+	        this.x = this.board.snake.head().j * 10;
+	        this.y = this.board.snake.head().i * 10;
+	        if (this.x < 0) {
+	          this.x = 0;
+	        }
+	        if (this.y < 0) {
+	          this.y = 0;
+	        }
+	        if (this.fxContext.fx1 === this.fxContext.lpFilter) {
+	          this.fxContext.fx1[_fxParams2.default['lpFilter']].value = Math.pow(10, this.y / 46.057239172) + 500;
+	        } else if (this.fxContext.fx1 === this.fxContext.hpFilter) {
+	          this.fxContext.fx1[_fxParams2.default['hpFilter']].value = Math.pow(10, this.y / 46.057239172);
+	        }
+	        if (this.fxContext.fx2 === this.fxContext.reverb) {
+	          this.fxContext.fx2[_fxParams2.default['reverb']].value = this.x * 0.0003;
+	        } else if (this.fxContext.fx2 === this.fxContext.phaser) {
+	          this.fxContext.fx2[_fxParams2.default['phaser']].value = this.x * 0.0048;
+	        }
+	      } else {
+	        this.fxContext.resetFx();
+	        window.clearInterval(this.intervalId);
+	      }
+	    }
+	  }, {
+	    key: 'render',
+	    value: function render() {
+	      this.updateClasses(this.board.snake.segments, "snake");
+	      this.updateClasses([this.board.apple.position], "apple");
+	    }
+	  }]);
+	
+	  return SnakeView;
+	}();
+	
+	exports.default = SnakeView;
 
 /***/ }
 /******/ ]);

@@ -461,3 +461,25 @@ html, body {
 	width: 10px;
 	height: 10px;
 }
+
+.snake-switch {
+	position: absolute;
+	right: 0;
+	top: -19px;
+	font-size: 11px;
+	background: black;
+	color: white;
+	padding: 2px;
+	border: 1px solid green;
+	border-radius: 3px;
+}
+
+.snake-switch:hover {
+	cursor: pointer;
+	color: green;
+}
+
+.snake-switch-on {
+	color: green;
+	
+}
