@@ -23,7 +23,7 @@ class Footer extends React.Component {
           </div>
         </div>
         <p className="footer-me-tag footer-el">
-          Made with {"\u266A"} by&nbsp;<a href="http://richardkwan.io/" className="myname">Richard Kwan</a>
+          Made with {"\u266A"} by&nbsp;<a href="http://taekyung.dev/" className="myname">Richard Kwan</a>
         </p>
         <a href="https://github.com/taekyunggg/drum_machine" className="footer-github footer-el">
           <i className="fa fa-github footer-icon" aria-hidden="true"></i>
